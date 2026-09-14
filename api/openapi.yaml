@@ -1,0 +1,2175 @@
+openapi: 3.1.0
+info:
+  contact: {}
+  description: ""
+  title: Maytes API
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /api/health:
+    get:
+      operationId: getHealth
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+          description: ""
+      summary: Health check
+      tags:
+      - Default
+  /oauth/token:
+    post:
+      operationId: getOAuthToken
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OAuthTokenRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OAuthTokenResponse"
+          description: ""
+        "400":
+          description: Invalid grant or request
+        "401":
+          description: Unauthorized
+      summary: Issue an access token
+      tags:
+      - Default
+  /api/merchant/v1/checkouts:
+    post:
+      operationId: createCheckout
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCheckoutRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateCheckoutResponse"
+          description: ""
+        "401":
+          content:
+            application/json:
+              examples:
+                unauthorized:
+                  summary: Unauthorized
+                  value:
+                    message: Unauthorized
+                    error: Unauthorized
+                    code: unauthorized
+              schema:
+                $ref: "#/components/schemas/createCheckout_401_response"
+          description: ""
+        "409":
+          content:
+            application/json:
+              examples:
+                order_already_authorized:
+                  summary: Order already authorized
+                  value:
+                    message: Order already authorized
+                    error: Conflict
+                    code: order_already_authorized
+                merchant_not_accepting_checkouts:
+                  summary: The merchant is paused or deactivated and is not accepting
+                    new checkouts
+                  value:
+                    message: The merchant is paused or deactivated and is not accepting
+                      new checkouts
+                    error: Conflict
+                    code: merchant_not_accepting_checkouts
+              schema:
+                $ref: "#/components/schemas/createCheckout_409_response"
+          description: ""
+        "422":
+          content:
+            application/json:
+              examples:
+                invalid_amount:
+                  summary: Invalid amount or amount arithmetic error
+                  value:
+                    message: Invalid amount or amount arithmetic error
+                    error: Unprocessable Entity
+                    code: invalid_amount
+                amount_below_minimum:
+                  summary: Amount is below the minimum chargeable amount for its currency
+                  value:
+                    message: Amount is below the minimum chargeable amount for its
+                      currency
+                    error: Unprocessable Entity
+                    code: amount_below_minimum
+                invalid_amount_arithmetic:
+                  summary: Amount arithmetic mismatch
+                  value:
+                    message: Amount arithmetic mismatch
+                    error: Unprocessable Entity
+                    code: invalid_amount_arithmetic
+                currency_not_supported:
+                  summary: The platform does not support checkouts in this currency
+                  value:
+                    message: The platform does not support checkouts in this currency
+                    error: Unprocessable Entity
+                    code: currency_not_supported
+                merchant_currency_mismatch:
+                  summary: The checkout's currency does not match the merchant's configured
+                    currency
+                  value:
+                    message: The checkout's currency does not match the merchant's
+                      configured currency
+                    error: Unprocessable Entity
+                    code: merchant_currency_mismatch
+                merchant_not_configured:
+                  summary: This merchant has not been configured for payments
+                  value:
+                    message: This merchant has not been configured for payments
+                    error: Unprocessable Entity
+                    code: merchant_not_configured
+              schema:
+                $ref: "#/components/schemas/createCheckout_422_response"
+          description: ""
+      security:
+      - bearer: []
+      summary: Create a new checkout
+      tags:
+      - Default
+  /api/merchant/v1/checkouts/{checkoutUuid}:
+    get:
+      operationId: getCheckout
+      parameters:
+      - explode: false
+        in: path
+        name: checkoutUuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: merchant_order_id
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCheckoutResponse"
+          description: ""
+        "401":
+          content:
+            application/json:
+              examples:
+                unauthorized:
+                  summary: Unauthorized
+                  value:
+                    message: Unauthorized
+                    error: Unauthorized
+                    code: unauthorized
+              schema:
+                $ref: "#/components/schemas/createCheckout_401_response"
+          description: ""
+        "404":
+          content:
+            application/json:
+              examples:
+                not_found:
+                  summary: Checkout not found
+                  value:
+                    message: Checkout not found
+                    error: Not Found
+                    code: not_found
+              schema:
+                $ref: "#/components/schemas/getCheckout_404_response"
+          description: ""
+        "422":
+          content:
+            application/json:
+              examples:
+                order_mismatch:
+                  summary: Order ID does not match
+                  value:
+                    message: Order ID does not match
+                    error: Unprocessable Entity
+                    code: order_mismatch
+              schema:
+                $ref: "#/components/schemas/getCheckout_422_response"
+          description: ""
+      security:
+      - bearer: []
+      summary: Get checkout details
+      tags:
+      - Default
+  /api/merchant/v1/checkouts/{checkoutUuid}/capture:
+    post:
+      operationId: captureCheckout
+      parameters:
+      - explode: false
+        in: path
+        name: checkoutUuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaptureCheckoutRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CaptureCheckoutResponse"
+          description: ""
+        "401":
+          content:
+            application/json:
+              examples:
+                unauthorized:
+                  summary: Unauthorized
+                  value:
+                    message: Unauthorized
+                    error: Unauthorized
+                    code: unauthorized
+              schema:
+                $ref: "#/components/schemas/createCheckout_401_response"
+          description: ""
+        "404":
+          content:
+            application/json:
+              examples:
+                not_found:
+                  summary: Checkout not found
+                  value:
+                    message: Checkout not found
+                    error: Not Found
+                    code: not_found
+              schema:
+                $ref: "#/components/schemas/getCheckout_404_response"
+          description: ""
+        "409":
+          content:
+            application/json:
+              examples:
+                not_capturable:
+                  summary: Checkout not capturable
+                  value:
+                    message: Checkout not capturable
+                    error: Conflict
+                    code: not_capturable
+              schema:
+                $ref: "#/components/schemas/captureCheckout_409_response"
+          description: ""
+        "422":
+          content:
+            application/json:
+              examples:
+                order_mismatch:
+                  summary: Order ID does not match
+                  value:
+                    message: Order ID does not match
+                    error: Unprocessable Entity
+                    code: order_mismatch
+                amount_mismatch:
+                  summary: Total amount does not match
+                  value:
+                    message: Total amount does not match
+                    error: Unprocessable Entity
+                    code: amount_mismatch
+                currency_mismatch:
+                  summary: Currency does not match
+                  value:
+                    message: Currency does not match
+                    error: Unprocessable Entity
+                    code: currency_mismatch
+                no_active_session:
+                  summary: No active session found
+                  value:
+                    message: No active session found
+                    error: Unprocessable Entity
+                    code: no_active_session
+              schema:
+                $ref: "#/components/schemas/captureCheckout_422_response"
+          description: ""
+      security:
+      - bearer: []
+      summary: Capture authorized checkout
+      tags:
+      - Default
+  /api/merchant/v1/checkouts/{checkoutUuid}/cancel:
+    post:
+      operationId: cancelCheckout
+      parameters:
+      - explode: false
+        in: path
+        name: checkoutUuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelCheckoutRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CancelCheckoutResponse"
+          description: ""
+        "401":
+          content:
+            application/json:
+              examples:
+                unauthorized:
+                  summary: Unauthorized
+                  value:
+                    message: Unauthorized
+                    error: Unauthorized
+                    code: unauthorized
+              schema:
+                $ref: "#/components/schemas/createCheckout_401_response"
+          description: ""
+        "404":
+          content:
+            application/json:
+              examples:
+                not_found:
+                  summary: Checkout not found
+                  value:
+                    message: Checkout not found
+                    error: Not Found
+                    code: not_found
+              schema:
+                $ref: "#/components/schemas/getCheckout_404_response"
+          description: ""
+        "409":
+          content:
+            application/json:
+              examples:
+                session_not_voidable:
+                  summary: "Cannot void session: a payment is in a non-voidable state"
+                  value:
+                    message: "Cannot void session: a payment is in a non-voidable\
+                      \ state"
+                    error: Conflict
+                    code: session_not_voidable
+              schema:
+                $ref: "#/components/schemas/cancelCheckout_409_response"
+          description: ""
+        "422":
+          content:
+            application/json:
+              examples:
+                order_mismatch:
+                  summary: Order ID does not match
+                  value:
+                    message: Order ID does not match
+                    error: Unprocessable Entity
+                    code: order_mismatch
+              schema:
+                $ref: "#/components/schemas/getCheckout_422_response"
+          description: ""
+      security:
+      - bearer: []
+      summary: Cancel authorized checkout
+      tags:
+      - Default
+  /api/merchant/v1/checkouts/{checkoutUuid}/refund:
+    post:
+      description: Initiates a full refund of the captured payment. Returns 204 immediately;
+        Stripe confirms asynchronously via webhook. Poll GET /checkouts/:uuid for
+        status and refund details.
+      operationId: refundCheckout
+      parameters:
+      - explode: false
+        in: path
+        name: checkoutUuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRefundRequest"
+        required: true
+      responses:
+        "204":
+          description: ""
+        "401":
+          content:
+            application/json:
+              examples:
+                unauthorized:
+                  summary: Unauthorized
+                  value:
+                    message: Unauthorized
+                    error: Unauthorized
+                    code: unauthorized
+              schema:
+                $ref: "#/components/schemas/createCheckout_401_response"
+          description: ""
+        "402":
+          content:
+            application/json:
+              examples:
+                refund_insufficient_funds:
+                  summary: Insufficient platform funds to process the refund; try
+                    again once funds are available
+                  value:
+                    message: Insufficient platform funds to process the refund; try
+                      again once funds are available
+                    code: refund_insufficient_funds
+              schema:
+                $ref: "#/components/schemas/refundCheckout_402_response"
+          description: ""
+        "404":
+          content:
+            application/json:
+              examples:
+                not_found:
+                  summary: Checkout not found
+                  value:
+                    message: Checkout not found
+                    error: Not Found
+                    code: not_found
+              schema:
+                $ref: "#/components/schemas/getCheckout_404_response"
+          description: ""
+        "409":
+          content:
+            application/json:
+              examples:
+                not_refundable:
+                  summary: Checkout is not in a refundable state
+                  value:
+                    message: Checkout is not in a refundable state
+                    error: Conflict
+                    code: not_refundable
+              schema:
+                $ref: "#/components/schemas/refundCheckout_409_response"
+          description: ""
+      security:
+      - bearer: []
+      summary: Refund a captured checkout
+      tags:
+      - Default
+  /api/merchant/v1/settlements:
+    get:
+      description: "Returns settlements for the authenticated merchant. Default sort:\
+        \ created_at ASC."
+      operationId: listSettlements
+      parameters:
+      - description: Pagination offset (default 0)
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema: {}
+        style: form
+      - description: "Max records to return (default 50, max 200)"
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema: {}
+        style: form
+      - description: "Sort direction (default: asc)"
+        explode: true
+        in: query
+        name: sort_dir
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+        style: form
+      - description: "Field to sort by (default: created_at)"
+        explode: true
+        in: query
+        name: sort_by
+        required: false
+        schema:
+          enum:
+          - created_at
+          - period_to
+          - settled_amount
+          type: string
+        style: form
+      - description: Include settlements created at or before this ISO-8601 timestamp
+        explode: true
+        in: query
+        name: created_before
+        required: false
+        schema: {}
+        style: form
+      - description: Include settlements created at or after this ISO-8601 timestamp
+        explode: true
+        in: query
+        name: created_after
+        required: false
+        schema: {}
+        style: form
+      - description: Filter by status
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - CREATED
+          - PENDING
+          - COMPLETED
+          - FAILED
+          - NEEDS_REVIEW
+          - CANCELLED
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListSettlementsResponse"
+          description: ""
+        "401":
+          content:
+            application/json:
+              examples:
+                unauthorized:
+                  summary: Unauthorized
+                  value:
+                    message: Unauthorized
+                    error: Unauthorized
+                    code: unauthorized
+              schema:
+                $ref: "#/components/schemas/createCheckout_401_response"
+          description: ""
+      security:
+      - bearer: []
+      summary: List settlements for this merchant
+      tags:
+      - Default
+  /api/merchant/v1/settlements/{uuid}:
+    get:
+      operationId: getSettlement
+      parameters:
+      - description: Settlement UUID
+        explode: false
+        in: path
+        name: uuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSettlementResponse"
+          description: ""
+        "401":
+          content:
+            application/json:
+              examples:
+                unauthorized:
+                  summary: Unauthorized
+                  value:
+                    message: Unauthorized
+                    error: Unauthorized
+                    code: unauthorized
+              schema:
+                $ref: "#/components/schemas/createCheckout_401_response"
+          description: ""
+        "404":
+          content:
+            application/json:
+              examples:
+                not_found:
+                  summary: Settlement not found
+                  value:
+                    message: Settlement not found
+                    error: Not Found
+                    code: not_found
+              schema:
+                $ref: "#/components/schemas/getCheckout_404_response"
+          description: ""
+      security:
+      - bearer: []
+      summary: Get a settlement by UUID
+      tags:
+      - Default
+components:
+  schemas:
+    HealthResponse:
+      example:
+        status: ok
+      properties:
+        status:
+          example: ok
+          type: string
+      required:
+      - status
+      id: HealthResponse
+    ErrorResponseDto:
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+        code:
+          type: string
+        metadata:
+          additionalProperties: {}
+      required:
+      - code
+      - error
+      - message
+    OAuthTokenRequest:
+      example:
+        refresh_token: refresh_token
+        password: password
+        grant_type: grant_type
+        scope: scope
+        client_secret: client_secret
+        client_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        username: username
+      properties:
+        grant_type:
+          minLength: 1
+          type: string
+        client_id:
+          format: uuid
+          type: string
+        client_secret:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        refresh_token:
+          type: string
+        scope:
+          type: string
+      required:
+      - client_id
+      - grant_type
+      id: OAuthTokenRequest
+    OAuthTokenResponse:
+      example:
+        access_token: access_token
+        refresh_token: refresh_token
+        scope: scope
+        token_type: token_type
+        expires_in: 0.8008281904610115
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: number
+        token_type:
+          type: string
+        scope:
+          type: string
+      required:
+      - access_token
+      - expires_in
+      - scope
+      - token_type
+      id: OAuthTokenResponse
+    Fee:
+      example:
+        gross: 0
+        breakdown:
+        - amount: 5
+          id: id
+          label: label
+          type: rate_card
+        - amount: 5
+          id: id
+          label: label
+          type: rate_card
+        discount: 0
+        net: 0
+      properties:
+        gross:
+          minimum: 0
+          type: integer
+        discount:
+          minimum: 0
+          type: integer
+        net:
+          minimum: 0
+          type: integer
+        breakdown:
+          items:
+            $ref: "#/components/schemas/FeeBreakdownLine"
+          type: array
+      required:
+      - breakdown
+      - discount
+      - gross
+      - net
+      title: Fee
+      id: Fee
+    FeeBreakdownLine:
+      example:
+        amount: 5
+        id: id
+        label: label
+        type: rate_card
+      properties:
+        type:
+          enum:
+          - rate_card
+          - promotion
+          type: string
+        id:
+          type: string
+        label:
+          type: string
+        amount:
+          type: integer
+      required:
+      - amount
+      - id
+      - label
+      - type
+      title: FeeBreakdownLine
+      id: FeeBreakdownLine
+    LineItem:
+      discriminator:
+        mapping:
+          ticket: "#/components/schemas/TicketLineItem"
+          physical_goods: "#/components/schemas/PhysicalGoodsLineItem"
+          service: "#/components/schemas/ServiceLineItem"
+          digital_goods: "#/components/schemas/DigitalGoodsLineItem"
+          food_beverage: "#/components/schemas/FoodBeverageLineItem"
+          donation: "#/components/schemas/DonationLineItem"
+          other: "#/components/schemas/OtherLineItem"
+        propertyName: category
+      oneOf:
+      - $ref: "#/components/schemas/TicketLineItem"
+      - $ref: "#/components/schemas/PhysicalGoodsLineItem"
+      - $ref: "#/components/schemas/ServiceLineItem"
+      - $ref: "#/components/schemas/DigitalGoodsLineItem"
+      - $ref: "#/components/schemas/FoodBeverageLineItem"
+      - $ref: "#/components/schemas/DonationLineItem"
+      - $ref: "#/components/schemas/OtherLineItem"
+      id: LineItem
+    TicketLineItem:
+      example:
+        parent_ref: parent_ref
+        item_ref: item_ref
+        quantity: 0
+        image_url: https://openapi-generator.tech
+        name: name
+        description: description
+        currency: currency
+        sku: sku
+        unit_price: 0
+        category: ticket
+        custom_data:
+          venue_name: venue_name
+          event_id: event_id
+          venue_address:
+            key: ""
+          timezone: timezone
+          terms_url: terms_url
+          name: name
+          attendee_required: true
+          event_start_at: 2000-01-23T04:56:07.000+00:00
+          event_end_at: 2000-01-23T04:56:07.000+00:00
+          ticket_class: ticket_class
+          delivery_mode: email
+          seating:
+            seat: seat
+            allocation:
+              key: ""
+            section: section
+            row: row
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - ticket
+          type: string
+        custom_data:
+          $ref: "#/components/schemas/TicketCustomData"
+      required:
+      - category
+      - currency
+      - custom_data
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: TicketLineItem
+      id: TicketLineItem
+    TicketCustomData:
+      example:
+        venue_name: venue_name
+        event_id: event_id
+        venue_address:
+          key: ""
+        timezone: timezone
+        terms_url: terms_url
+        name: name
+        attendee_required: true
+        event_start_at: 2000-01-23T04:56:07.000+00:00
+        event_end_at: 2000-01-23T04:56:07.000+00:00
+        ticket_class: ticket_class
+        delivery_mode: email
+        seating:
+          seat: seat
+          allocation:
+            key: ""
+          section: section
+          row: row
+      properties:
+        event_id:
+          type: string
+        event_start_at:
+          format: date-time
+          type: string
+        timezone:
+          type: string
+        ticket_class:
+          type: string
+        name:
+          type: string
+        event_end_at:
+          format: date-time
+          type: string
+        delivery_mode:
+          enum:
+          - email
+          - sms
+          - post
+          - at_venue
+          type: string
+        venue_name:
+          type: string
+        venue_address:
+          additionalProperties: {}
+        seating:
+          $ref: "#/components/schemas/TicketSeating"
+        terms_url:
+          type: string
+        attendee_required:
+          type: boolean
+      required:
+      - event_id
+      - event_start_at
+      - timezone
+      id: TicketCustomData
+    TicketSeating:
+      example:
+        seat: seat
+        allocation:
+          key: ""
+        section: section
+        row: row
+      properties:
+        section:
+          type: string
+        row:
+          type: string
+        seat:
+          type: string
+        allocation:
+          additionalProperties: {}
+      id: TicketSeating
+    PhysicalGoodsLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - physical_goods
+          type: string
+        custom_data:
+          $ref: "#/components/schemas/PhysicalGoodsCustomData"
+      required:
+      - category
+      - currency
+      - custom_data
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: PhysicalGoodsLineItem
+      id: PhysicalGoodsLineItem
+    PhysicalGoodsCustomData:
+      properties:
+        product_id:
+          type: string
+        comments:
+          type: string
+      required:
+      - product_id
+      id: PhysicalGoodsCustomData
+    ServiceLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - service
+          type: string
+        custom_data:
+          $ref: "#/components/schemas/ServiceCustomData"
+      required:
+      - category
+      - currency
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: ServiceLineItem
+      id: ServiceLineItem
+    ServiceCustomData:
+      properties:
+        serviceType:
+          nullable: true
+          type: string
+      id: ServiceCustomData
+    DigitalGoodsLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - digital_goods
+          type: string
+        custom_data:
+          $ref: "#/components/schemas/DigitalGoodsCustomData"
+      required:
+      - category
+      - currency
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: DigitalGoodsLineItem
+      id: DigitalGoodsLineItem
+    DigitalGoodsCustomData:
+      properties:
+        productCategory:
+          nullable: true
+          type: string
+      id: DigitalGoodsCustomData
+    FoodBeverageLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - food_beverage
+          type: string
+      required:
+      - category
+      - currency
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: FoodBeverageLineItem
+      id: FoodBeverageLineItem
+    DonationLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - donation
+          type: string
+      required:
+      - category
+      - currency
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: DonationLineItem
+      id: DonationLineItem
+    OtherLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - other
+          type: string
+      required:
+      - category
+      - currency
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: OtherLineItem
+      id: OtherLineItem
+    CheckoutFee:
+      example:
+        amount: 0
+        metadata:
+          key: ""
+        applies_to:
+        - applies_to
+        - applies_to
+        scope: cart
+        name: name
+        description: description
+        currency: currency
+        fee_type: refund_protection
+      properties:
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        fee_type:
+          enum:
+          - refund_protection
+          - surcharge
+          - transaction_fee
+          - service_fee
+          - delivery_fee
+          - carbon_offset
+          - other
+          nullable: true
+          type: string
+        scope:
+          enum:
+          - cart
+          - item
+          type: string
+        amount:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        metadata:
+          additionalProperties: {}
+          nullable: true
+        applies_to:
+          items:
+            type: string
+          nullable: true
+          type: array
+      required:
+      - amount
+      - currency
+      - name
+      - scope
+      title: CheckoutFee
+      id: CheckoutFee
+    CheckoutDiscount:
+      example:
+        amount: 0
+        metadata:
+          key: ""
+        applies_to:
+        - applies_to
+        - applies_to
+        scope: cart
+        name: name
+        description: description
+        currency: currency
+      properties:
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        scope:
+          enum:
+          - cart
+          - item
+          type: string
+        amount:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        metadata:
+          additionalProperties: {}
+          nullable: true
+        applies_to:
+          items:
+            type: string
+          nullable: true
+          type: array
+      required:
+      - amount
+      - currency
+      - name
+      - scope
+      title: CheckoutDiscount
+      id: CheckoutDiscount
+    Tax:
+      properties:
+        amount:
+          minimum: 0
+          type: integer
+        percentage:
+          nullable: true
+          pattern: "^\\d+(\\.\\d{1,4})?$"
+          type: string
+        inclusive:
+          type: boolean
+      id: Tax
+    CustomerData:
+      properties:
+        name:
+          nullable: true
+          type: string
+        mobile:
+          nullable: true
+          type: string
+        email:
+          nullable: true
+          type: string
+      id: CustomerData
+    CreateCheckoutRequest:
+      example:
+        allocation_model: basic_amount
+        fees:
+        - amount: 0
+          metadata:
+            key: ""
+          applies_to:
+          - applies_to
+          - applies_to
+          scope: cart
+          name: name
+          description: description
+          currency: currency
+          fee_type: refund_protection
+        - amount: 0
+          metadata:
+            key: ""
+          applies_to:
+          - applies_to
+          - applies_to
+          scope: cart
+          name: name
+          description: description
+          currency: currency
+          fee_type: refund_protection
+        metadata:
+          key: ""
+        merchant_order_id: merchant_order_id
+        tax: ""
+        shipping_amount: 0
+        discounts:
+        - amount: 0
+          metadata:
+            key: ""
+          applies_to:
+          - applies_to
+          - applies_to
+          scope: cart
+          name: name
+          description: description
+          currency: currency
+        - amount: 0
+          metadata:
+            key: ""
+          applies_to:
+          - applies_to
+          - applies_to
+          scope: cart
+          name: name
+          description: description
+          currency: currency
+        total_amount: 0
+        customer_data: ""
+        return_url: https://openapi-generator.tech
+        currency: currency
+        cancel_url: https://openapi-generator.tech
+        items:
+        - parent_ref: parent_ref
+          item_ref: item_ref
+          quantity: 0
+          image_url: https://openapi-generator.tech
+          name: name
+          description: description
+          currency: currency
+          sku: sku
+          unit_price: 0
+          category: ticket
+          custom_data:
+            venue_name: venue_name
+            event_id: event_id
+            venue_address:
+              key: ""
+            timezone: timezone
+            terms_url: terms_url
+            name: name
+            attendee_required: true
+            event_start_at: 2000-01-23T04:56:07.000+00:00
+            event_end_at: 2000-01-23T04:56:07.000+00:00
+            ticket_class: ticket_class
+            delivery_mode: email
+            seating:
+              seat: seat
+              allocation:
+                key: ""
+              section: section
+              row: row
+        - parent_ref: parent_ref
+          item_ref: item_ref
+          quantity: 0
+          image_url: https://openapi-generator.tech
+          name: name
+          description: description
+          currency: currency
+          sku: sku
+          unit_price: 0
+          category: ticket
+          custom_data:
+            venue_name: venue_name
+            event_id: event_id
+            venue_address:
+              key: ""
+            timezone: timezone
+            terms_url: terms_url
+            name: name
+            attendee_required: true
+            event_start_at: 2000-01-23T04:56:07.000+00:00
+            event_end_at: 2000-01-23T04:56:07.000+00:00
+            ticket_class: ticket_class
+            delivery_mode: email
+            seating:
+              seat: seat
+              allocation:
+                key: ""
+              section: section
+              row: row
+        merchant_expires_at: 2000-01-23T04:56:07.000+00:00
+      properties:
+        merchant_order_id:
+          nullable: true
+          type: string
+        merchant_expires_at:
+          format: date-time
+          nullable: true
+          type: string
+        total_amount:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        return_url:
+          format: uri
+          type: string
+        cancel_url:
+          format: uri
+          type: string
+        items:
+          items:
+            $ref: "#/components/schemas/LineItem"
+          minItems: 1
+          type: array
+        fees:
+          items:
+            $ref: "#/components/schemas/CheckoutFee"
+          nullable: true
+          type: array
+        discounts:
+          items:
+            $ref: "#/components/schemas/CheckoutDiscount"
+          nullable: true
+          type: array
+        tax:
+          allOf:
+          - $ref: "#/components/schemas/Tax"
+          nullable: true
+        shipping_amount:
+          minimum: 0
+          nullable: true
+          type: integer
+        customer_data:
+          allOf:
+          - $ref: "#/components/schemas/CustomerData"
+          nullable: true
+        metadata:
+          additionalProperties: {}
+          nullable: true
+        allocation_model:
+          enum:
+          - basic_amount
+          - item_assignment
+          nullable: true
+          type: string
+      required:
+      - cancel_url
+      - currency
+      - items
+      - return_url
+      - total_amount
+      id: CreateCheckoutRequest
+    CheckoutCreated:
+      example:
+        checkout_url: checkout_url
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        checkout_uuid: checkout_uuid
+        status: status
+      properties:
+        checkout_uuid:
+          type: string
+        status:
+          type: string
+        checkout_url:
+          type: string
+        expires_at:
+          format: date-time
+          type: string
+      required:
+      - checkout_url
+      - checkout_uuid
+      - expires_at
+      - status
+      id: CheckoutCreated
+    CreateCheckoutResponse:
+      example:
+        data:
+          checkout_url: checkout_url
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          checkout_uuid: checkout_uuid
+          status: status
+      properties:
+        data:
+          $ref: "#/components/schemas/CheckoutCreated"
+      required:
+      - data
+      id: CreateCheckoutResponse
+    Checkout:
+      example:
+        checkout_url: checkout_url
+        amount: 0
+        merchant_order_id: merchant_order_id
+        last_refund_at: 2000-01-23T04:56:07.000+00:00
+        checkout_uuid: checkout_uuid
+        service_fee:
+          gross: 0
+          breakdown:
+          - amount: 5
+            id: id
+            label: label
+            type: rate_card
+          - amount: 5
+            id: id
+            label: label
+            type: rate_card
+          discount: 0
+          net: 0
+        captured_at: 2000-01-23T04:56:07.000+00:00
+        refunded_amount: 0
+        merchant_processor_fee: 0
+        return_url: return_url
+        currency: currency
+        merchant_service_fee: 0
+        cancel_url: cancel_url
+        merchant_expires_at: 2000-01-23T04:56:07.000+00:00
+        status: status
+        transaction_ref: transaction_ref
+      properties:
+        checkout_uuid:
+          type: string
+        merchant_order_id:
+          nullable: true
+          type: string
+        status:
+          type: string
+        transaction_ref:
+          nullable: true
+          type: string
+        checkout_url:
+          type: string
+        merchant_expires_at:
+          format: date-time
+          nullable: true
+          type: string
+        captured_at:
+          format: date-time
+          nullable: true
+          type: string
+        return_url:
+          nullable: true
+          type: string
+        cancel_url:
+          nullable: true
+          type: string
+        amount:
+          type: integer
+        currency:
+          type: string
+        service_fee:
+          $ref: "#/components/schemas/Fee"
+        refunded_amount:
+          minimum: 0
+          type: integer
+        merchant_processor_fee:
+          minimum: 0
+          type: integer
+        merchant_service_fee:
+          minimum: 0
+          type: integer
+        last_refund_at:
+          format: date-time
+          nullable: true
+          type: string
+      required:
+      - amount
+      - cancel_url
+      - captured_at
+      - checkout_url
+      - checkout_uuid
+      - currency
+      - last_refund_at
+      - merchant_expires_at
+      - merchant_order_id
+      - merchant_processor_fee
+      - merchant_service_fee
+      - refunded_amount
+      - return_url
+      - service_fee
+      - status
+      - transaction_ref
+      id: Checkout
+    GetCheckoutResponse:
+      example:
+        data:
+          checkout_url: checkout_url
+          amount: 0
+          merchant_order_id: merchant_order_id
+          last_refund_at: 2000-01-23T04:56:07.000+00:00
+          checkout_uuid: checkout_uuid
+          service_fee:
+            gross: 0
+            breakdown:
+            - amount: 5
+              id: id
+              label: label
+              type: rate_card
+            - amount: 5
+              id: id
+              label: label
+              type: rate_card
+            discount: 0
+            net: 0
+          captured_at: 2000-01-23T04:56:07.000+00:00
+          refunded_amount: 0
+          merchant_processor_fee: 0
+          return_url: return_url
+          currency: currency
+          merchant_service_fee: 0
+          cancel_url: cancel_url
+          merchant_expires_at: 2000-01-23T04:56:07.000+00:00
+          status: status
+          transaction_ref: transaction_ref
+      properties:
+        data:
+          $ref: "#/components/schemas/Checkout"
+      required:
+      - data
+      id: GetCheckoutResponse
+    CaptureCheckoutRequest:
+      example:
+        metadata:
+          key: ""
+        merchant_order_id: merchant_order_id
+        currency: currency
+        expected_total_amount: 0
+      properties:
+        merchant_order_id:
+          nullable: true
+          type: string
+        expected_total_amount:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        metadata:
+          additionalProperties: {}
+          nullable: true
+      id: CaptureCheckoutRequest
+    CheckoutCaptured:
+      example:
+        amount: 0
+        merchant_order_id: merchant_order_id
+        checkout_uuid: checkout_uuid
+        captured_at: 2000-01-23T04:56:07.000+00:00
+        currency: currency
+        status: status
+      properties:
+        checkout_uuid:
+          type: string
+        merchant_order_id:
+          nullable: true
+          type: string
+        status:
+          type: string
+        captured_at:
+          format: date-time
+          nullable: true
+          type: string
+        amount:
+          type: integer
+        currency:
+          type: string
+      required:
+      - amount
+      - captured_at
+      - checkout_uuid
+      - currency
+      - merchant_order_id
+      - status
+      id: CheckoutCaptured
+    CaptureCheckoutResponse:
+      example:
+        data:
+          amount: 0
+          merchant_order_id: merchant_order_id
+          checkout_uuid: checkout_uuid
+          captured_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          status: status
+      properties:
+        data:
+          $ref: "#/components/schemas/CheckoutCaptured"
+      required:
+      - data
+      id: CaptureCheckoutResponse
+    CancelCheckoutRequest:
+      example:
+        merchant_order_id: merchant_order_id
+      properties:
+        merchant_order_id:
+          type: string
+      id: CancelCheckoutRequest
+    CheckoutCancelled:
+      example:
+        merchant_order_id: merchant_order_id
+        checkout_uuid: checkout_uuid
+        status: status
+      properties:
+        checkout_uuid:
+          type: string
+        merchant_order_id:
+          nullable: true
+          type: string
+        status:
+          type: string
+      required:
+      - checkout_uuid
+      - merchant_order_id
+      - status
+      id: CheckoutCancelled
+    CancelCheckoutResponse:
+      example:
+        data:
+          merchant_order_id: merchant_order_id
+          checkout_uuid: checkout_uuid
+          status: status
+      properties:
+        data:
+          $ref: "#/components/schemas/CheckoutCancelled"
+      required:
+      - data
+      id: CancelCheckoutResponse
+    CreateRefundRequest:
+      example:
+        reason: reason
+        merchant_refund_ref: merchant_refund_ref
+      properties:
+        reason:
+          description: Free-text reason; forwarded to Stripe as refund metadata.
+          maxLength: 500
+          type: string
+        merchant_refund_ref:
+          description: Idempotency key scoped to the merchant. Repeating the same
+            value returns the existing refund.
+          maxLength: 255
+          minLength: 1
+          type: string
+      required:
+      - merchant_refund_ref
+      id: CreateRefundRequest
+    Settlement:
+      example:
+        stripe_transfer_id: stripe_transfer_id
+        notes: notes
+        reviewed_at: 2000-01-23T04:56:07.000+00:00
+        created_at: 2000-01-23T04:56:07.000+00:00
+        uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        settled_amount: 6
+        merchant_payable_amount: 0
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        period_from: 2000-01-23T04:56:07.000+00:00
+        idempotency_key: idempotency_key
+        rejection_reason: rejection_reason
+        currency: currency
+        settled_at: 2000-01-23T04:56:07.000+00:00
+        merchant_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        period_to: 2000-01-23T04:56:07.000+00:00
+        reviewed_by_user_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        status: status
+      properties:
+        uuid:
+          format: uuid
+          type: string
+        merchant_uuid:
+          format: uuid
+          type: string
+        period_from:
+          format: date-time
+          type: string
+        period_to:
+          format: date-time
+          type: string
+        idempotency_key:
+          type: string
+        merchant_payable_amount:
+          type: integer
+        settled_amount:
+          type: integer
+        currency:
+          maxLength: 3
+          minLength: 3
+          type: string
+        status:
+          type: string
+        stripe_transfer_id:
+          nullable: true
+          type: string
+        notes:
+          nullable: true
+          type: string
+        settled_at:
+          format: date-time
+          nullable: true
+          type: string
+        expires_at:
+          format: date-time
+          nullable: true
+          type: string
+        reviewed_by_user_uuid:
+          format: uuid
+          nullable: true
+          type: string
+        reviewed_at:
+          format: date-time
+          nullable: true
+          type: string
+        rejection_reason:
+          nullable: true
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - created_at
+      - currency
+      - expires_at
+      - idempotency_key
+      - merchant_payable_amount
+      - merchant_uuid
+      - notes
+      - period_from
+      - period_to
+      - rejection_reason
+      - reviewed_at
+      - reviewed_by_user_uuid
+      - settled_amount
+      - settled_at
+      - status
+      - stripe_transfer_id
+      - updated_at
+      - uuid
+      id: Settlement
+    ListSettlementsResponse:
+      example:
+        data:
+        - stripe_transfer_id: stripe_transfer_id
+          notes: notes
+          reviewed_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          settled_amount: 6
+          merchant_payable_amount: 0
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          period_from: 2000-01-23T04:56:07.000+00:00
+          idempotency_key: idempotency_key
+          rejection_reason: rejection_reason
+          currency: currency
+          settled_at: 2000-01-23T04:56:07.000+00:00
+          merchant_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          period_to: 2000-01-23T04:56:07.000+00:00
+          reviewed_by_user_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          status: status
+        - stripe_transfer_id: stripe_transfer_id
+          notes: notes
+          reviewed_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          settled_amount: 6
+          merchant_payable_amount: 0
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          period_from: 2000-01-23T04:56:07.000+00:00
+          idempotency_key: idempotency_key
+          rejection_reason: rejection_reason
+          currency: currency
+          settled_at: 2000-01-23T04:56:07.000+00:00
+          merchant_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          period_to: 2000-01-23T04:56:07.000+00:00
+          reviewed_by_user_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          status: status
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/Settlement"
+          type: array
+      required:
+      - data
+      id: ListSettlementsResponse
+    GetSettlementResponse:
+      example:
+        data:
+          stripe_transfer_id: stripe_transfer_id
+          notes: notes
+          reviewed_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          settled_amount: 6
+          merchant_payable_amount: 0
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          period_from: 2000-01-23T04:56:07.000+00:00
+          idempotency_key: idempotency_key
+          rejection_reason: rejection_reason
+          currency: currency
+          settled_at: 2000-01-23T04:56:07.000+00:00
+          merchant_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          period_to: 2000-01-23T04:56:07.000+00:00
+          reviewed_by_user_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          status: status
+      properties:
+        data:
+          $ref: "#/components/schemas/Settlement"
+      required:
+      - data
+      id: GetSettlementResponse
+    createCheckout_401_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - unauthorized
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: unauthorized
+        message: message
+        error: error
+    createCheckout_409_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - order_already_authorized
+            - merchant_not_accepting_checkouts
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: order_already_authorized
+        message: message
+        error: error
+    createCheckout_422_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - invalid_amount
+            - amount_below_minimum
+            - invalid_amount_arithmetic
+            - currency_not_supported
+            - merchant_currency_mismatch
+            - merchant_not_configured
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: invalid_amount
+        message: message
+        error: error
+    getCheckout_404_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - not_found
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: not_found
+        message: message
+        error: error
+    getCheckout_422_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - order_mismatch
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: order_mismatch
+        message: message
+        error: error
+    captureCheckout_409_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - not_capturable
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: not_capturable
+        message: message
+        error: error
+    captureCheckout_422_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - order_mismatch
+            - amount_mismatch
+            - currency_mismatch
+            - no_active_session
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: order_mismatch
+        message: message
+        error: error
+    cancelCheckout_409_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - session_not_voidable
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: session_not_voidable
+        message: message
+        error: error
+    refundCheckout_402_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - refund_insufficient_funds
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: refund_insufficient_funds
+        message: message
+        error: error
+    refundCheckout_409_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - not_refundable
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: not_refundable
+        message: message
+        error: error
+  securitySchemes:
+    bearer:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
+    basic:
+      scheme: basic
+      type: http
+

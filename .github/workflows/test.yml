@@ -1,0 +1,32 @@
+# Verifies the published package builds and is consumable on every .NET version it
+# claims to support. The upstream pipeline that generates this repo exercises a
+# single version, so without this matrix that claim is untested.
+#
+# This file is generated — edit it at sdks/backend-sdk/mirror/dotnet/ in the
+# api-ts-v3 monorepo, not here.
+
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: .NET ${{ matrix.dotnet }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dotnet: ['8.0.x', '9.0.x']
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+      - run: dotnet build MaytesApiClient.sln --configuration Release
+      # `dotnet pack` is what produces the .nupkg the release uploads; running it
+      # here catches packaging metadata errors before they reach NuGet.
+      - run: dotnet pack src/MaytesApiClient/MaytesApiClient.csproj --configuration Release --output ./artifacts
