@@ -33,7 +33,7 @@ namespace MaytesApiClient.Client
         /// Version of the package.
         /// </summary>
         /// <value>Version of the package.</value>
-        public const string Version = "0.1.2";
+        public const string Version = "0.1.3";
 
         /// <summary>
         /// Identifier for ISO 8601 DateTime Format
@@ -117,7 +117,7 @@ namespace MaytesApiClient.Client
         public Configuration()
         {
             Proxy = null;
-            UserAgent = WebUtility.UrlEncode("OpenAPI-Generator/0.1.2/csharp");
+            UserAgent = WebUtility.UrlEncode("OpenAPI-Generator/0.1.3/csharp");
             BasePath = "http://localhost";
             DefaultHeaders = new ConcurrentDictionary<string, string>();
             ApiKey = new ConcurrentDictionary<string, string>();
@@ -540,7 +540,7 @@ namespace MaytesApiClient.Client
             report += "    OS: " + System.Environment.OSVersion + "\n";
             report += "    .NET Framework Version: " + System.Environment.Version  + "\n";
             report += "    Version of the API: 1.0.0\n";
-            report += "    SDK Package Version: 0.1.2\n";
+            report += "    SDK Package Version: 0.1.3\n";
 
             return report;
         }

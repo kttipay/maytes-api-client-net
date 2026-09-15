@@ -12,7 +12,7 @@
     <Description>Official .NET client for the Maytes API — create, capture and cancel checkouts, with OAuth2 token management and webhook signature verification.</Description>
     <Copyright>Copyright (c) 2026 Maytes</Copyright>
     <RootNamespace>MaytesApiClient</RootNamespace>
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\MaytesApiClient.xml</DocumentationFile>
     <RepositoryUrl>https://github.com/kttipay/maytes-api-client-net.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
