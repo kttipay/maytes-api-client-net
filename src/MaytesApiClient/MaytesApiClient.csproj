@@ -4,7 +4,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo><!-- setting GenerateAssemblyInfo to false causes this bug https://github.com/dotnet/project-system/issues/3934 -->
     <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>MaytesApiClient</AssemblyName>
-    <PackageId>maytes-api-client-net</PackageId>
+    <PackageId>Maytes.ApiClient.Net</PackageId>
     <OutputType>Library</OutputType>
     <Authors>Maytes</Authors>
     <Company>Maytes</Company>
@@ -12,16 +12,17 @@
     <Description>Official .NET client for the Maytes API — create, capture and cancel checkouts, with OAuth2 token management and webhook signature verification.</Description>
     <Copyright>Copyright (c) 2026 Maytes</Copyright>
     <RootNamespace>MaytesApiClient</RootNamespace>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\MaytesApiClient.xml</DocumentationFile>
     <RepositoryUrl>https://github.com/kttipay/maytes-api-client-net.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Minor update</PackageReleaseNotes>
     <Nullable>annotations</Nullable>
     <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://developers.maytes.co</PackageProjectUrl>
     <PackageTags>maytes;checkout;payments;api;sdk</PackageTags>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

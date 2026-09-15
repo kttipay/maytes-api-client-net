@@ -10,7 +10,7 @@ capture and cancel checkouts, and verify inbound webhook signatures.
 ## Install
 
 ```bash
-dotnet add package maytes-api-client-net
+dotnet add package Maytes.ApiClient.Net
 ```
 
 ## Usage
