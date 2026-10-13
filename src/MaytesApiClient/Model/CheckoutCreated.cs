@@ -44,7 +44,7 @@ namespace MaytesApiClient.Model
         /// <param name="status">status (required).</param>
         /// <param name="checkoutUrl">checkoutUrl (required).</param>
         /// <param name="expiresAt">expiresAt (required).</param>
-        public CheckoutCreated(string checkoutUuid = default, string status = default, string checkoutUrl = default, DateTime expiresAt = default)
+        public CheckoutCreated(string checkoutUuid = default, string status = default, string checkoutUrl = default, DateTime? expiresAt = default)
         {
             // to ensure "checkoutUuid" is required (not null)
             if (checkoutUuid == null)
@@ -64,6 +64,11 @@ namespace MaytesApiClient.Model
                 throw new ArgumentNullException("checkoutUrl is a required property for CheckoutCreated and cannot be null");
             }
             this.CheckoutUrl = checkoutUrl;
+            // to ensure "expiresAt" is required (not null)
+            if (expiresAt == null)
+            {
+                throw new ArgumentNullException("expiresAt is a required property for CheckoutCreated and cannot be null");
+            }
             this.ExpiresAt = expiresAt;
         }
 
@@ -89,7 +94,7 @@ namespace MaytesApiClient.Model
         /// Gets or Sets ExpiresAt
         /// </summary>
         [DataMember(Name = "expires_at", IsRequired = true, EmitDefaultValue = true)]
-        public DateTime ExpiresAt { get; set; }
+        public DateTime? ExpiresAt { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

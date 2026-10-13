@@ -1550,6 +1550,7 @@ components:
           type: string
         expires_at:
           format: date-time
+          nullable: true
           type: string
       required:
       - checkout_url
