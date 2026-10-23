@@ -172,6 +172,15 @@ namespace MaytesApiClient.Test.Model
         }
 
         /// <summary>
+        /// Test the property 'RemainingAmount'
+        /// </summary>
+        [Fact]
+        public void RemainingAmountTest()
+        {
+            // TODO unit test for the property 'RemainingAmount'
+        }
+
+        /// <summary>
         /// Test the property 'MerchantProcessorFee'
         /// </summary>
         [Fact]

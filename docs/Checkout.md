@@ -17,6 +17,7 @@ Name | Type | Description | Notes
 **Currency** | **string** |  | 
 **ServiceFee** | [**Fee**](Fee.md) |  | 
 **RefundedAmount** | **int** |  | 
+**RemainingAmount** | **int** |  | 
 **MerchantProcessorFee** | **int** |  | 
 **MerchantServiceFee** | **int** |  | 
 **LastRefundAt** | **DateTime?** |  | 

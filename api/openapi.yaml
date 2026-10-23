@@ -1578,6 +1578,7 @@ components:
         merchant_order_id: merchant_order_id
         last_refund_at: 2000-01-23T04:56:07.000+00:00
         checkout_uuid: checkout_uuid
+        remaining_amount: 0
         service_fee:
           gross: 0
           breakdown:
@@ -1637,6 +1638,9 @@ components:
         refunded_amount:
           minimum: 0
           type: integer
+        remaining_amount:
+          minimum: 0
+          type: integer
         merchant_processor_fee:
           minimum: 0
           type: integer
@@ -1660,6 +1664,7 @@ components:
       - merchant_processor_fee
       - merchant_service_fee
       - refunded_amount
+      - remaining_amount
       - return_url
       - service_fee
       - status
@@ -1673,6 +1678,7 @@ components:
           merchant_order_id: merchant_order_id
           last_refund_at: 2000-01-23T04:56:07.000+00:00
           checkout_uuid: checkout_uuid
+          remaining_amount: 0
           service_fee:
             gross: 0
             breakdown:

@@ -53,10 +53,11 @@ namespace MaytesApiClient.Model
         /// <param name="currency">currency (required).</param>
         /// <param name="serviceFee">serviceFee (required).</param>
         /// <param name="refundedAmount">refundedAmount (required).</param>
+        /// <param name="remainingAmount">remainingAmount (required).</param>
         /// <param name="merchantProcessorFee">merchantProcessorFee (required).</param>
         /// <param name="merchantServiceFee">merchantServiceFee (required).</param>
         /// <param name="lastRefundAt">lastRefundAt (required).</param>
-        public Checkout(string checkoutUuid = default, string merchantOrderId = default, string status = default, string transactionRef = default, string checkoutUrl = default, DateTime? merchantExpiresAt = default, DateTime? capturedAt = default, string returnUrl = default, string cancelUrl = default, int amount = default, string currency = default, Fee serviceFee = default, int refundedAmount = default, int merchantProcessorFee = default, int merchantServiceFee = default, DateTime? lastRefundAt = default)
+        public Checkout(string checkoutUuid = default, string merchantOrderId = default, string status = default, string transactionRef = default, string checkoutUrl = default, DateTime? merchantExpiresAt = default, DateTime? capturedAt = default, string returnUrl = default, string cancelUrl = default, int amount = default, string currency = default, Fee serviceFee = default, int refundedAmount = default, int remainingAmount = default, int merchantProcessorFee = default, int merchantServiceFee = default, DateTime? lastRefundAt = default)
         {
             // to ensure "checkoutUuid" is required (not null)
             if (checkoutUuid == null)
@@ -126,6 +127,7 @@ namespace MaytesApiClient.Model
             }
             this.ServiceFee = serviceFee;
             this.RefundedAmount = refundedAmount;
+            this.RemainingAmount = remainingAmount;
             this.MerchantProcessorFee = merchantProcessorFee;
             this.MerchantServiceFee = merchantServiceFee;
             // to ensure "lastRefundAt" is required (not null)
@@ -215,6 +217,12 @@ namespace MaytesApiClient.Model
         public int RefundedAmount { get; set; }
 
         /// <summary>
+        /// Gets or Sets RemainingAmount
+        /// </summary>
+        [DataMember(Name = "remaining_amount", IsRequired = true, EmitDefaultValue = true)]
+        public int RemainingAmount { get; set; }
+
+        /// <summary>
         /// Gets or Sets MerchantProcessorFee
         /// </summary>
         [DataMember(Name = "merchant_processor_fee", IsRequired = true, EmitDefaultValue = true)]
@@ -253,6 +261,7 @@ namespace MaytesApiClient.Model
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  ServiceFee: ").Append(ServiceFee).Append("\n");
             sb.Append("  RefundedAmount: ").Append(RefundedAmount).Append("\n");
+            sb.Append("  RemainingAmount: ").Append(RemainingAmount).Append("\n");
             sb.Append("  MerchantProcessorFee: ").Append(MerchantProcessorFee).Append("\n");
             sb.Append("  MerchantServiceFee: ").Append(MerchantServiceFee).Append("\n");
             sb.Append("  LastRefundAt: ").Append(LastRefundAt).Append("\n");
@@ -280,6 +289,12 @@ namespace MaytesApiClient.Model
             if (this.RefundedAmount < (int)0)
             {
                 yield return new ValidationResult("Invalid value for RefundedAmount, must be a value greater than or equal to 0.", new [] { "RefundedAmount" });
+            }
+
+            // RemainingAmount (int) minimum
+            if (this.RemainingAmount < (int)0)
+            {
+                yield return new ValidationResult("Invalid value for RemainingAmount, must be a value greater than or equal to 0.", new [] { "RemainingAmount" });
             }
 
             // MerchantProcessorFee (int) minimum
