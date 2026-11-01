@@ -17,6 +17,9 @@ docs/CheckoutCaptured.md
 docs/CheckoutCreated.md
 docs/CheckoutDiscount.md
 docs/CheckoutFee.md
+docs/CheckoutFriend.md
+docs/CheckoutFriendItem.md
+docs/CheckoutFriends.md
 docs/CreateCheckout401Response.md
 docs/CreateCheckout409Response.md
 docs/CreateCheckout422Response.md
@@ -68,6 +71,9 @@ src/MaytesApiClient.Test/Model/CheckoutCapturedTests.cs
 src/MaytesApiClient.Test/Model/CheckoutCreatedTests.cs
 src/MaytesApiClient.Test/Model/CheckoutDiscountTests.cs
 src/MaytesApiClient.Test/Model/CheckoutFeeTests.cs
+src/MaytesApiClient.Test/Model/CheckoutFriendItemTests.cs
+src/MaytesApiClient.Test/Model/CheckoutFriendTests.cs
+src/MaytesApiClient.Test/Model/CheckoutFriendsTests.cs
 src/MaytesApiClient.Test/Model/CheckoutTests.cs
 src/MaytesApiClient.Test/Model/CreateCheckout401ResponseTests.cs
 src/MaytesApiClient.Test/Model/CreateCheckout409ResponseTests.cs
@@ -137,6 +143,9 @@ src/MaytesApiClient/Model/CheckoutCaptured.cs
 src/MaytesApiClient/Model/CheckoutCreated.cs
 src/MaytesApiClient/Model/CheckoutDiscount.cs
 src/MaytesApiClient/Model/CheckoutFee.cs
+src/MaytesApiClient/Model/CheckoutFriend.cs
+src/MaytesApiClient/Model/CheckoutFriendItem.cs
+src/MaytesApiClient/Model/CheckoutFriends.cs
 src/MaytesApiClient/Model/CreateCheckout401Response.cs
 src/MaytesApiClient/Model/CreateCheckout409Response.cs
 src/MaytesApiClient/Model/CreateCheckout422Response.cs

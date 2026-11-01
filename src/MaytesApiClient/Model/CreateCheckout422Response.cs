@@ -45,34 +45,40 @@ namespace MaytesApiClient.Model
             InvalidAmount = 1,
 
             /// <summary>
+            /// Enum InvalidFriends for value: invalid_friends
+            /// </summary>
+            [EnumMember(Value = "invalid_friends")]
+            InvalidFriends = 2,
+
+            /// <summary>
             /// Enum AmountBelowMinimum for value: amount_below_minimum
             /// </summary>
             [EnumMember(Value = "amount_below_minimum")]
-            AmountBelowMinimum = 2,
+            AmountBelowMinimum = 3,
 
             /// <summary>
             /// Enum InvalidAmountArithmetic for value: invalid_amount_arithmetic
             /// </summary>
             [EnumMember(Value = "invalid_amount_arithmetic")]
-            InvalidAmountArithmetic = 3,
+            InvalidAmountArithmetic = 4,
 
             /// <summary>
             /// Enum CurrencyNotSupported for value: currency_not_supported
             /// </summary>
             [EnumMember(Value = "currency_not_supported")]
-            CurrencyNotSupported = 4,
+            CurrencyNotSupported = 5,
 
             /// <summary>
             /// Enum MerchantCurrencyMismatch for value: merchant_currency_mismatch
             /// </summary>
             [EnumMember(Value = "merchant_currency_mismatch")]
-            MerchantCurrencyMismatch = 5,
+            MerchantCurrencyMismatch = 6,
 
             /// <summary>
             /// Enum MerchantNotConfigured for value: merchant_not_configured
             /// </summary>
             [EnumMember(Value = "merchant_not_configured")]
-            MerchantNotConfigured = 6
+            MerchantNotConfigured = 7
         }
 
 

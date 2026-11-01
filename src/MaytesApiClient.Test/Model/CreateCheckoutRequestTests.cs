@@ -179,5 +179,14 @@ namespace MaytesApiClient.Test.Model
         {
             // TODO unit test for the property 'AllocationModel'
         }
+
+        /// <summary>
+        /// Test the property 'Friends'
+        /// </summary>
+        [Fact]
+        public void FriendsTest()
+        {
+            // TODO unit test for the property 'Friends'
+        }
     }
 }

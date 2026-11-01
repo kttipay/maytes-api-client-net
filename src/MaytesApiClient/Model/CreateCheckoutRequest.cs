@@ -79,7 +79,8 @@ namespace MaytesApiClient.Model
         /// <param name="customerData">customerData.</param>
         /// <param name="metadata">metadata.</param>
         /// <param name="allocationModel">allocationModel.</param>
-        public CreateCheckoutRequest(string merchantOrderId = default, DateTime? merchantExpiresAt = default, int totalAmount = default, string currency = default, string returnUrl = default, string cancelUrl = default, List<LineItem> items = default, List<CheckoutFee> fees = default, List<CheckoutDiscount> discounts = default, Tax tax = default, int? shippingAmount = default, CustomerData customerData = default, Dictionary<string, Object> metadata = default, AllocationModelEnum? allocationModel = default)
+        /// <param name="friends">Who the customer is expected to split with. Pre-fills their share and allocation screens; the customer can still change it. Personal data — send it only when you hold it..</param>
+        public CreateCheckoutRequest(string merchantOrderId = default, DateTime? merchantExpiresAt = default, int totalAmount = default, string currency = default, string returnUrl = default, string cancelUrl = default, List<LineItem> items = default, List<CheckoutFee> fees = default, List<CheckoutDiscount> discounts = default, Tax tax = default, int? shippingAmount = default, CustomerData customerData = default, Dictionary<string, Object> metadata = default, AllocationModelEnum? allocationModel = default, CheckoutFriends friends = default)
         {
             this.TotalAmount = totalAmount;
             // to ensure "currency" is required (not null)
@@ -115,6 +116,7 @@ namespace MaytesApiClient.Model
             this.CustomerData = customerData;
             this.Metadata = metadata;
             this.AllocationModel = allocationModel;
+            this.Friends = friends;
         }
 
         /// <summary>
@@ -196,6 +198,13 @@ namespace MaytesApiClient.Model
         public Dictionary<string, Object> Metadata { get; set; }
 
         /// <summary>
+        /// Who the customer is expected to split with. Pre-fills their share and allocation screens; the customer can still change it. Personal data — send it only when you hold it.
+        /// </summary>
+        /// <value>Who the customer is expected to split with. Pre-fills their share and allocation screens; the customer can still change it. Personal data — send it only when you hold it.</value>
+        [DataMember(Name = "friends", EmitDefaultValue = true)]
+        public CheckoutFriends Friends { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -217,6 +226,7 @@ namespace MaytesApiClient.Model
             sb.Append("  CustomerData: ").Append(CustomerData).Append("\n");
             sb.Append("  Metadata: ").Append(Metadata).Append("\n");
             sb.Append("  AllocationModel: ").Append(AllocationModel).Append("\n");
+            sb.Append("  Friends: ").Append(Friends).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

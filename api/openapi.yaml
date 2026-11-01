@@ -106,6 +106,12 @@ paths:
                     message: Invalid amount or amount arithmetic error
                     error: Unprocessable Entity
                     code: invalid_amount
+                invalid_friends:
+                  summary: The friends block cannot be split as given
+                  value:
+                    message: The friends block cannot be split as given
+                    error: Unprocessable Entity
+                    code: invalid_friends
                 amount_below_minimum:
                   summary: Amount is below the minimum chargeable amount for its currency
                   value:
@@ -1354,6 +1360,70 @@ components:
           nullable: true
           type: string
       id: CustomerData
+    CheckoutFriends:
+      properties:
+        count:
+          description: "How many friends will split, not counting the customer. Give\
+            \ this or `people`."
+          maximum: 50
+          minimum: 1
+          type: integer
+        people:
+          description: "The friends, optionally with their shares. Give this or `count`."
+          items:
+            $ref: "#/components/schemas/CheckoutFriend"
+          maxItems: 50
+          minItems: 1
+          type: array
+      id: CheckoutFriends
+    CheckoutFriend:
+      properties:
+        name:
+          maxLength: 200
+          minLength: 1
+          type: string
+        mobile:
+          description: "E.164, e.g. +61412345678"
+          maxLength: 20
+          minLength: 3
+          type: string
+        email:
+          format: email
+          nullable: true
+          pattern: "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\\
+            -]*\\.)+[A-Za-z]{2,}$"
+          type: string
+        amount:
+          description: This friend’s share in minor units. Give it for every friend
+            or for none.
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        items:
+          description: The cart lines this friend pays for (item_assignment only).
+            Give it for every friend or for none.
+          items:
+            $ref: "#/components/schemas/CheckoutFriendItem"
+          minItems: 1
+          type: array
+      required:
+      - mobile
+      - name
+      id: CheckoutFriend
+    CheckoutFriendItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        quantity:
+          description: How many units of this line this friend pays for. Omit for
+            the whole line.
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+      required:
+      - item_ref
+      id: CheckoutFriendItem
     CreateCheckoutRequest:
       example:
         allocation_model: basic_amount
@@ -1384,6 +1454,7 @@ components:
           key: ""
         merchant_order_id: merchant_order_id
         tax: ""
+        friends: ""
         shipping_amount: 0
         discounts:
         - amount: 0
@@ -1528,6 +1599,13 @@ components:
           - item_assignment
           nullable: true
           type: string
+        friends:
+          allOf:
+          - $ref: "#/components/schemas/CheckoutFriends"
+          description: Who the customer is expected to split with. Pre-fills their
+            share and allocation screens; the customer can still change it. Personal
+            data — send it only when you hold it.
+          nullable: true
       required:
       - cancel_url
       - currency
@@ -2042,6 +2120,7 @@ components:
           code:
             enum:
             - invalid_amount
+            - invalid_friends
             - amount_below_minimum
             - invalid_amount_arithmetic
             - currency_not_supported
