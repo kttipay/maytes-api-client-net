@@ -1916,7 +1916,7 @@ components:
         notes: notes
         reviewed_at: 2000-01-23T04:56:07.000+00:00
         created_at: 2000-01-23T04:56:07.000+00:00
-        uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        uuid: uuid
         settled_amount: 6
         merchant_payable_amount: 0
         expires_at: 2000-01-23T04:56:07.000+00:00
@@ -1926,16 +1926,14 @@ components:
         rejection_reason: rejection_reason
         currency: currency
         settled_at: 2000-01-23T04:56:07.000+00:00
-        merchant_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        merchant_uuid: merchant_uuid
         period_to: 2000-01-23T04:56:07.000+00:00
-        reviewed_by_user_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        reviewed_by_user_uuid: reviewed_by_user_uuid
         status: status
       properties:
         uuid:
-          format: uuid
           type: string
         merchant_uuid:
-          format: uuid
           type: string
         period_from:
           format: date-time
@@ -1970,7 +1968,6 @@ components:
           nullable: true
           type: string
         reviewed_by_user_uuid:
-          format: uuid
           nullable: true
           type: string
         reviewed_at:
@@ -2013,7 +2010,7 @@ components:
           notes: notes
           reviewed_at: 2000-01-23T04:56:07.000+00:00
           created_at: 2000-01-23T04:56:07.000+00:00
-          uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          uuid: uuid
           settled_amount: 6
           merchant_payable_amount: 0
           expires_at: 2000-01-23T04:56:07.000+00:00
@@ -2023,15 +2020,15 @@ components:
           rejection_reason: rejection_reason
           currency: currency
           settled_at: 2000-01-23T04:56:07.000+00:00
-          merchant_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          merchant_uuid: merchant_uuid
           period_to: 2000-01-23T04:56:07.000+00:00
-          reviewed_by_user_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          reviewed_by_user_uuid: reviewed_by_user_uuid
           status: status
         - stripe_transfer_id: stripe_transfer_id
           notes: notes
           reviewed_at: 2000-01-23T04:56:07.000+00:00
           created_at: 2000-01-23T04:56:07.000+00:00
-          uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          uuid: uuid
           settled_amount: 6
           merchant_payable_amount: 0
           expires_at: 2000-01-23T04:56:07.000+00:00
@@ -2041,9 +2038,9 @@ components:
           rejection_reason: rejection_reason
           currency: currency
           settled_at: 2000-01-23T04:56:07.000+00:00
-          merchant_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          merchant_uuid: merchant_uuid
           period_to: 2000-01-23T04:56:07.000+00:00
-          reviewed_by_user_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          reviewed_by_user_uuid: reviewed_by_user_uuid
           status: status
       properties:
         data:
@@ -2060,7 +2057,7 @@ components:
           notes: notes
           reviewed_at: 2000-01-23T04:56:07.000+00:00
           created_at: 2000-01-23T04:56:07.000+00:00
-          uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          uuid: uuid
           settled_amount: 6
           merchant_payable_amount: 0
           expires_at: 2000-01-23T04:56:07.000+00:00
@@ -2070,9 +2067,9 @@ components:
           rejection_reason: rejection_reason
           currency: currency
           settled_at: 2000-01-23T04:56:07.000+00:00
-          merchant_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          merchant_uuid: merchant_uuid
           period_to: 2000-01-23T04:56:07.000+00:00
-          reviewed_by_user_uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          reviewed_by_user_uuid: reviewed_by_user_uuid
           status: status
       properties:
         data:

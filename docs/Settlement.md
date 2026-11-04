@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Uuid** | **Guid** |  | 
-**MerchantUuid** | **Guid** |  | 
+**Uuid** | **string** |  | 
+**MerchantUuid** | **string** |  | 
 **PeriodFrom** | **DateTime** |  | 
 **PeriodTo** | **DateTime** |  | 
 **IdempotencyKey** | **string** |  | 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 **Notes** | **string** |  | 
 **SettledAt** | **DateTime?** |  | 
 **ExpiresAt** | **DateTime?** |  | 
-**ReviewedByUserUuid** | **Guid?** |  | 
+**ReviewedByUserUuid** | **string** |  | 
 **ReviewedAt** | **DateTime?** |  | 
 **RejectionReason** | **string** |  | 
 **CreatedAt** | **DateTime** |  | 

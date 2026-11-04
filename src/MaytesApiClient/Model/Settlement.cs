@@ -58,9 +58,19 @@ namespace MaytesApiClient.Model
         /// <param name="rejectionReason">rejectionReason (required).</param>
         /// <param name="createdAt">createdAt (required).</param>
         /// <param name="updatedAt">updatedAt (required).</param>
-        public Settlement(Guid uuid = default, Guid merchantUuid = default, DateTime periodFrom = default, DateTime periodTo = default, string idempotencyKey = default, int merchantPayableAmount = default, int settledAmount = default, string currency = default, string status = default, string stripeTransferId = default, string notes = default, DateTime? settledAt = default, DateTime? expiresAt = default, Guid? reviewedByUserUuid = default, DateTime? reviewedAt = default, string rejectionReason = default, DateTime createdAt = default, DateTime updatedAt = default)
+        public Settlement(string uuid = default, string merchantUuid = default, DateTime periodFrom = default, DateTime periodTo = default, string idempotencyKey = default, int merchantPayableAmount = default, int settledAmount = default, string currency = default, string status = default, string stripeTransferId = default, string notes = default, DateTime? settledAt = default, DateTime? expiresAt = default, string reviewedByUserUuid = default, DateTime? reviewedAt = default, string rejectionReason = default, DateTime createdAt = default, DateTime updatedAt = default)
         {
+            // to ensure "uuid" is required (not null)
+            if (uuid == null)
+            {
+                throw new ArgumentNullException("uuid is a required property for Settlement and cannot be null");
+            }
             this.Uuid = uuid;
+            // to ensure "merchantUuid" is required (not null)
+            if (merchantUuid == null)
+            {
+                throw new ArgumentNullException("merchantUuid is a required property for Settlement and cannot be null");
+            }
             this.MerchantUuid = merchantUuid;
             this.PeriodFrom = periodFrom;
             this.PeriodTo = periodTo;
@@ -134,13 +144,13 @@ namespace MaytesApiClient.Model
         /// Gets or Sets Uuid
         /// </summary>
         [DataMember(Name = "uuid", IsRequired = true, EmitDefaultValue = true)]
-        public Guid Uuid { get; set; }
+        public string Uuid { get; set; }
 
         /// <summary>
         /// Gets or Sets MerchantUuid
         /// </summary>
         [DataMember(Name = "merchant_uuid", IsRequired = true, EmitDefaultValue = true)]
-        public Guid MerchantUuid { get; set; }
+        public string MerchantUuid { get; set; }
 
         /// <summary>
         /// Gets or Sets PeriodFrom
@@ -212,7 +222,7 @@ namespace MaytesApiClient.Model
         /// Gets or Sets ReviewedByUserUuid
         /// </summary>
         [DataMember(Name = "reviewed_by_user_uuid", IsRequired = true, EmitDefaultValue = true)]
-        public Guid? ReviewedByUserUuid { get; set; }
+        public string ReviewedByUserUuid { get; set; }
 
         /// <summary>
         /// Gets or Sets ReviewedAt
