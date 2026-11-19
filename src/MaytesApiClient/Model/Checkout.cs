@@ -43,7 +43,7 @@ namespace MaytesApiClient.Model
         /// <param name="checkoutUuid">checkoutUuid (required).</param>
         /// <param name="merchantOrderId">merchantOrderId (required).</param>
         /// <param name="status">status (required).</param>
-        /// <param name="transactionRef">transactionRef (required).</param>
+        /// <param name="transactionRef">Always null. Will be removed in a future API version. (required).</param>
         /// <param name="checkoutUrl">checkoutUrl (required).</param>
         /// <param name="merchantExpiresAt">merchantExpiresAt (required).</param>
         /// <param name="capturedAt">capturedAt (required).</param>
@@ -157,8 +157,9 @@ namespace MaytesApiClient.Model
         public string Status { get; set; }
 
         /// <summary>
-        /// Gets or Sets TransactionRef
+        /// Always null. Will be removed in a future API version.
         /// </summary>
+        /// <value>Always null. Will be removed in a future API version.</value>
         [DataMember(Name = "transaction_ref", IsRequired = true, EmitDefaultValue = true)]
         public string TransactionRef { get; set; }
 

@@ -42,7 +42,13 @@ namespace MaytesApiClient.Model
             /// Enum NotRefundable for value: not_refundable
             /// </summary>
             [EnumMember(Value = "not_refundable")]
-            NotRefundable = 1
+            NotRefundable = 1,
+
+            /// <summary>
+            /// Enum PaymentHasChargeback for value: payment_has_chargeback
+            /// </summary>
+            [EnumMember(Value = "payment_has_chargeback")]
+            PaymentHasChargeback = 2
         }
 
 

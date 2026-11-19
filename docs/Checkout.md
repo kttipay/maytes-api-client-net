@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **CheckoutUuid** | **string** |  | 
 **MerchantOrderId** | **string** |  | 
 **Status** | **string** |  | 
-**TransactionRef** | **string** |  | 
+**TransactionRef** | **string** | Always null. Will be removed in a future API version. | 
 **CheckoutUrl** | **string** |  | 
 **MerchantExpiresAt** | **DateTime?** |  | 
 **CapturedAt** | **DateTime?** |  | 

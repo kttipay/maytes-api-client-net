@@ -476,6 +476,14 @@ paths:
                     message: Checkout is not in a refundable state
                     error: Conflict
                     code: not_refundable
+                payment_has_chargeback:
+                  summary: "A payment in this refund has an open or lost chargeback,\
+                    \ so it cannot be refunded"
+                  value:
+                    message: "A payment in this refund has an open or lost chargeback,\
+                      \ so it cannot be refunded"
+                    error: Conflict
+                    code: payment_has_chargeback
               schema:
                 $ref: "#/components/schemas/refundCheckout_409_response"
           description: ""
@@ -1689,6 +1697,7 @@ components:
         status:
           type: string
         transaction_ref:
+          description: Always null. Will be removed in a future API version.
           nullable: true
           type: string
         checkout_url:
@@ -2238,6 +2247,7 @@ components:
           code:
             enum:
             - not_refundable
+            - payment_has_chargeback
             type: string
         required:
         - code
