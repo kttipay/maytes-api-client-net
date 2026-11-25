@@ -20,6 +20,7 @@ Name | Type | Description | Notes
 **ReviewedByUserUuid** | **string** |  | 
 **ReviewedAt** | **DateTime?** |  | 
 **RejectionReason** | **string** |  | 
+**Upsell** | [**SettlementUpsell**](SettlementUpsell.md) |  | 
 **CreatedAt** | **DateTime** |  | 
 **UpdatedAt** | **DateTime** |  | 
 

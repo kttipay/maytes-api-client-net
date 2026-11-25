@@ -199,6 +199,15 @@ namespace MaytesApiClient.Test.Model
         }
 
         /// <summary>
+        /// Test the property 'Upsell'
+        /// </summary>
+        [Fact]
+        public void UpsellTest()
+        {
+            // TODO unit test for the property 'Upsell'
+        }
+
+        /// <summary>
         /// Test the property 'CreatedAt'
         /// </summary>
         [Fact]

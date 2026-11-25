@@ -56,9 +56,10 @@ namespace MaytesApiClient.Model
         /// <param name="reviewedByUserUuid">reviewedByUserUuid (required).</param>
         /// <param name="reviewedAt">reviewedAt (required).</param>
         /// <param name="rejectionReason">rejectionReason (required).</param>
+        /// <param name="upsell">upsell (required).</param>
         /// <param name="createdAt">createdAt (required).</param>
         /// <param name="updatedAt">updatedAt (required).</param>
-        public Settlement(string uuid = default, string merchantUuid = default, DateTime periodFrom = default, DateTime periodTo = default, string idempotencyKey = default, int merchantPayableAmount = default, int settledAmount = default, string currency = default, string status = default, string stripeTransferId = default, string notes = default, DateTime? settledAt = default, DateTime? expiresAt = default, string reviewedByUserUuid = default, DateTime? reviewedAt = default, string rejectionReason = default, DateTime createdAt = default, DateTime updatedAt = default)
+        public Settlement(string uuid = default, string merchantUuid = default, DateTime periodFrom = default, DateTime periodTo = default, string idempotencyKey = default, int merchantPayableAmount = default, int settledAmount = default, string currency = default, string status = default, string stripeTransferId = default, string notes = default, DateTime? settledAt = default, DateTime? expiresAt = default, string reviewedByUserUuid = default, DateTime? reviewedAt = default, string rejectionReason = default, SettlementUpsell upsell = default, DateTime createdAt = default, DateTime updatedAt = default)
         {
             // to ensure "uuid" is required (not null)
             if (uuid == null)
@@ -136,6 +137,12 @@ namespace MaytesApiClient.Model
                 throw new ArgumentNullException("rejectionReason is a required property for Settlement and cannot be null");
             }
             this.RejectionReason = rejectionReason;
+            // to ensure "upsell" is required (not null)
+            if (upsell == null)
+            {
+                throw new ArgumentNullException("upsell is a required property for Settlement and cannot be null");
+            }
+            this.Upsell = upsell;
             this.CreatedAt = createdAt;
             this.UpdatedAt = updatedAt;
         }
@@ -237,6 +244,12 @@ namespace MaytesApiClient.Model
         public string RejectionReason { get; set; }
 
         /// <summary>
+        /// Gets or Sets Upsell
+        /// </summary>
+        [DataMember(Name = "upsell", IsRequired = true, EmitDefaultValue = true)]
+        public SettlementUpsell Upsell { get; set; }
+
+        /// <summary>
         /// Gets or Sets CreatedAt
         /// </summary>
         [DataMember(Name = "created_at", IsRequired = true, EmitDefaultValue = true)]
@@ -272,6 +285,7 @@ namespace MaytesApiClient.Model
             sb.Append("  ReviewedByUserUuid: ").Append(ReviewedByUserUuid).Append("\n");
             sb.Append("  ReviewedAt: ").Append(ReviewedAt).Append("\n");
             sb.Append("  RejectionReason: ").Append(RejectionReason).Append("\n");
+            sb.Append("  Upsell: ").Append(Upsell).Append("\n");
             sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
             sb.Append("  UpdatedAt: ").Append(UpdatedAt).Append("\n");
             sb.Append("}\n");

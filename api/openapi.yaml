@@ -75,6 +75,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/createCheckout_401_response"
           description: ""
+        "403":
+          content:
+            application/json:
+              examples:
+                api_checkouts_disabled:
+                  summary: API checkouts are not enabled for this merchant. Contact
+                    Maytes to turn them on.
+                  value:
+                    message: API checkouts are not enabled for this merchant. Contact
+                      Maytes to turn them on.
+                    error: Forbidden
+                    code: api_checkouts_disabled
+              schema:
+                $ref: "#/components/schemas/createCheckout_403_response"
+          description: ""
         "409":
           content:
             application/json:
@@ -779,6 +794,101 @@ components:
       - type
       title: FeeBreakdownLine
       id: FeeBreakdownLine
+    TicketCustomData:
+      example:
+        venue_name: venue_name
+        event_id: event_id
+        venue_address:
+          key: ""
+        timezone: timezone
+        terms_url: terms_url
+        name: name
+        attendee_required: true
+        event_start_at: 2000-01-23T04:56:07.000+00:00
+        event_end_at: 2000-01-23T04:56:07.000+00:00
+        ticket_class: ticket_class
+        delivery_mode: email
+        seating:
+          seat: seat
+          allocation:
+            key: ""
+          section: section
+          row: row
+      properties:
+        event_id:
+          type: string
+        event_start_at:
+          format: date-time
+          type: string
+        timezone:
+          type: string
+        ticket_class:
+          type: string
+        name:
+          type: string
+        event_end_at:
+          format: date-time
+          type: string
+        delivery_mode:
+          enum:
+          - email
+          - sms
+          - post
+          - at_venue
+          type: string
+        venue_name:
+          type: string
+        venue_address:
+          additionalProperties: {}
+        seating:
+          $ref: "#/components/schemas/TicketSeating"
+        terms_url:
+          type: string
+        attendee_required:
+          type: boolean
+      required:
+      - event_id
+      - event_start_at
+      - timezone
+      id: TicketCustomData
+    TicketSeating:
+      example:
+        seat: seat
+        allocation:
+          key: ""
+        section: section
+        row: row
+      properties:
+        section:
+          type: string
+        row:
+          type: string
+        seat:
+          type: string
+        allocation:
+          additionalProperties: {}
+      id: TicketSeating
+    PhysicalGoodsCustomData:
+      properties:
+        product_id:
+          type: string
+        comments:
+          type: string
+      required:
+      - product_id
+      id: PhysicalGoodsCustomData
+    ServiceCustomData:
+      properties:
+        serviceType:
+          nullable: true
+          type: string
+      id: ServiceCustomData
+    DigitalGoodsCustomData:
+      properties:
+        productCategory:
+          nullable: true
+          type: string
+      id: DigitalGoodsCustomData
     LineItem:
       discriminator:
         mapping:
@@ -876,80 +986,6 @@ components:
       - unit_price
       title: TicketLineItem
       id: TicketLineItem
-    TicketCustomData:
-      example:
-        venue_name: venue_name
-        event_id: event_id
-        venue_address:
-          key: ""
-        timezone: timezone
-        terms_url: terms_url
-        name: name
-        attendee_required: true
-        event_start_at: 2000-01-23T04:56:07.000+00:00
-        event_end_at: 2000-01-23T04:56:07.000+00:00
-        ticket_class: ticket_class
-        delivery_mode: email
-        seating:
-          seat: seat
-          allocation:
-            key: ""
-          section: section
-          row: row
-      properties:
-        event_id:
-          type: string
-        event_start_at:
-          format: date-time
-          type: string
-        timezone:
-          type: string
-        ticket_class:
-          type: string
-        name:
-          type: string
-        event_end_at:
-          format: date-time
-          type: string
-        delivery_mode:
-          enum:
-          - email
-          - sms
-          - post
-          - at_venue
-          type: string
-        venue_name:
-          type: string
-        venue_address:
-          additionalProperties: {}
-        seating:
-          $ref: "#/components/schemas/TicketSeating"
-        terms_url:
-          type: string
-        attendee_required:
-          type: boolean
-      required:
-      - event_id
-      - event_start_at
-      - timezone
-      id: TicketCustomData
-    TicketSeating:
-      example:
-        seat: seat
-        allocation:
-          key: ""
-        section: section
-        row: row
-      properties:
-        section:
-          type: string
-        row:
-          type: string
-        seat:
-          type: string
-        allocation:
-          additionalProperties: {}
-      id: TicketSeating
     PhysicalGoodsLineItem:
       properties:
         item_ref:
@@ -997,15 +1033,6 @@ components:
       - unit_price
       title: PhysicalGoodsLineItem
       id: PhysicalGoodsLineItem
-    PhysicalGoodsCustomData:
-      properties:
-        product_id:
-          type: string
-        comments:
-          type: string
-      required:
-      - product_id
-      id: PhysicalGoodsCustomData
     ServiceLineItem:
       properties:
         item_ref:
@@ -1052,12 +1079,6 @@ components:
       - unit_price
       title: ServiceLineItem
       id: ServiceLineItem
-    ServiceCustomData:
-      properties:
-        serviceType:
-          nullable: true
-          type: string
-      id: ServiceCustomData
     DigitalGoodsLineItem:
       properties:
         item_ref:
@@ -1104,12 +1125,6 @@ components:
       - unit_price
       title: DigitalGoodsLineItem
       id: DigitalGoodsLineItem
-    DigitalGoodsCustomData:
-      properties:
-        productCategory:
-          nullable: true
-          type: string
-      id: DigitalGoodsCustomData
     FoodBeverageLineItem:
       properties:
         item_ref:
@@ -1925,6 +1940,7 @@ components:
         notes: notes
         reviewed_at: 2000-01-23T04:56:07.000+00:00
         created_at: 2000-01-23T04:56:07.000+00:00
+        upsell: ""
         uuid: uuid
         settled_amount: 6
         merchant_payable_amount: 0
@@ -1986,6 +2002,10 @@ components:
         rejection_reason:
           nullable: true
           type: string
+        upsell:
+          allOf:
+          - $ref: "#/components/schemas/SettlementUpsell"
+          nullable: true
         created_at:
           format: date-time
           type: string
@@ -2010,8 +2030,29 @@ components:
       - status
       - stripe_transfer_id
       - updated_at
+      - upsell
       - uuid
       id: Settlement
+    SettlementUpsell:
+      properties:
+        sales_amount:
+          description: "Upsell order totals paid out in this settlement, gross, minor\
+            \ units"
+          type: integer
+        fee_amount:
+          description: "Upsell fees kept by Maytes in this window, minor units"
+          type: integer
+        net_amount:
+          description: "sales_amount minus fee_amount: the upsell part of the payout"
+          type: integer
+        order_count:
+          type: integer
+      required:
+      - fee_amount
+      - net_amount
+      - order_count
+      - sales_amount
+      id: SettlementUpsell
     ListSettlementsResponse:
       example:
         data:
@@ -2019,6 +2060,7 @@ components:
           notes: notes
           reviewed_at: 2000-01-23T04:56:07.000+00:00
           created_at: 2000-01-23T04:56:07.000+00:00
+          upsell: ""
           uuid: uuid
           settled_amount: 6
           merchant_payable_amount: 0
@@ -2037,6 +2079,7 @@ components:
           notes: notes
           reviewed_at: 2000-01-23T04:56:07.000+00:00
           created_at: 2000-01-23T04:56:07.000+00:00
+          upsell: ""
           uuid: uuid
           settled_amount: 6
           merchant_payable_amount: 0
@@ -2066,6 +2109,7 @@ components:
           notes: notes
           reviewed_at: 2000-01-23T04:56:07.000+00:00
           created_at: 2000-01-23T04:56:07.000+00:00
+          upsell: ""
           uuid: uuid
           settled_amount: 6
           merchant_payable_amount: 0
@@ -2100,6 +2144,22 @@ components:
         metadata:
           key: ""
         code: unauthorized
+        message: message
+        error: error
+    createCheckout_403_response:
+      allOf:
+      - $ref: "#/components/schemas/ErrorResponseDto"
+      - properties:
+          code:
+            enum:
+            - api_checkouts_disabled
+            type: string
+        required:
+        - code
+      example:
+        metadata:
+          key: ""
+        code: api_checkouts_disabled
         message: message
         error: error
     createCheckout_409_response:

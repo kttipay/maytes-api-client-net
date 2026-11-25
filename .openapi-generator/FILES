@@ -21,6 +21,7 @@ docs/CheckoutFriend.md
 docs/CheckoutFriendItem.md
 docs/CheckoutFriends.md
 docs/CreateCheckout401Response.md
+docs/CreateCheckout403Response.md
 docs/CreateCheckout409Response.md
 docs/CreateCheckout422Response.md
 docs/CreateCheckoutRequest.md
@@ -52,6 +53,7 @@ docs/RefundCheckout409Response.md
 docs/ServiceCustomData.md
 docs/ServiceLineItem.md
 docs/Settlement.md
+docs/SettlementUpsell.md
 docs/Tax.md
 docs/TicketCustomData.md
 docs/TicketLineItem.md
@@ -76,6 +78,7 @@ src/MaytesApiClient.Test/Model/CheckoutFriendTests.cs
 src/MaytesApiClient.Test/Model/CheckoutFriendsTests.cs
 src/MaytesApiClient.Test/Model/CheckoutTests.cs
 src/MaytesApiClient.Test/Model/CreateCheckout401ResponseTests.cs
+src/MaytesApiClient.Test/Model/CreateCheckout403ResponseTests.cs
 src/MaytesApiClient.Test/Model/CreateCheckout409ResponseTests.cs
 src/MaytesApiClient.Test/Model/CreateCheckout422ResponseTests.cs
 src/MaytesApiClient.Test/Model/CreateCheckoutRequestTests.cs
@@ -106,6 +109,7 @@ src/MaytesApiClient.Test/Model/RefundCheckout409ResponseTests.cs
 src/MaytesApiClient.Test/Model/ServiceCustomDataTests.cs
 src/MaytesApiClient.Test/Model/ServiceLineItemTests.cs
 src/MaytesApiClient.Test/Model/SettlementTests.cs
+src/MaytesApiClient.Test/Model/SettlementUpsellTests.cs
 src/MaytesApiClient.Test/Model/TaxTests.cs
 src/MaytesApiClient.Test/Model/TicketCustomDataTests.cs
 src/MaytesApiClient.Test/Model/TicketLineItemTests.cs
@@ -147,6 +151,7 @@ src/MaytesApiClient/Model/CheckoutFriend.cs
 src/MaytesApiClient/Model/CheckoutFriendItem.cs
 src/MaytesApiClient/Model/CheckoutFriends.cs
 src/MaytesApiClient/Model/CreateCheckout401Response.cs
+src/MaytesApiClient/Model/CreateCheckout403Response.cs
 src/MaytesApiClient/Model/CreateCheckout409Response.cs
 src/MaytesApiClient/Model/CreateCheckout422Response.cs
 src/MaytesApiClient/Model/CreateCheckoutRequest.cs
@@ -177,6 +182,7 @@ src/MaytesApiClient/Model/RefundCheckout409Response.cs
 src/MaytesApiClient/Model/ServiceCustomData.cs
 src/MaytesApiClient/Model/ServiceLineItem.cs
 src/MaytesApiClient/Model/Settlement.cs
+src/MaytesApiClient/Model/SettlementUpsell.cs
 src/MaytesApiClient/Model/Tax.cs
 src/MaytesApiClient/Model/TicketCustomData.cs
 src/MaytesApiClient/Model/TicketLineItem.cs
