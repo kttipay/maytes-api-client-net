@@ -656,607 +656,280 @@ paths:
       - Default
 components:
   schemas:
-    HealthResponse:
+    CancelCheckoutRequest:
       example:
-        status: ok
+        merchant_order_id: merchant_order_id
       properties:
-        status:
-          example: ok
+        merchant_order_id:
           type: string
+      id: CancelCheckoutRequest
+    CancelCheckoutResponse:
+      example:
+        data:
+          merchant_order_id: merchant_order_id
+          checkout_uuid: checkout_uuid
+          status: status
+      properties:
+        data:
+          $ref: "#/components/schemas/CheckoutCancelled"
       required:
-      - status
-      id: HealthResponse
-    ErrorResponseDto:
+      - data
+      id: CancelCheckoutResponse
+    CaptureCheckoutRequest:
+      example:
+        metadata:
+          key: ""
+        merchant_order_id: merchant_order_id
+        currency: currency
+        expected_total_amount: 0
       properties:
-        message:
+        merchant_order_id:
+          nullable: true
           type: string
-        error:
-          type: string
-        code:
+        expected_total_amount:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
           type: string
         metadata:
           additionalProperties: {}
-      required:
-      - code
-      - error
-      - message
-    OAuthTokenRequest:
+          nullable: true
+      id: CaptureCheckoutRequest
+    CaptureCheckoutResponse:
       example:
-        refresh_token: refresh_token
-        password: password
-        grant_type: grant_type
-        scope: scope
-        client_secret: client_secret
-        client_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        username: username
+        data:
+          amount: 0
+          merchant_order_id: merchant_order_id
+          checkout_uuid: checkout_uuid
+          captured_at: 2000-01-23T04:56:07.000+00:00
+          currency: currency
+          status: status
       properties:
-        grant_type:
-          minLength: 1
-          type: string
-        client_id:
-          format: uuid
-          type: string
-        client_secret:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-        refresh_token:
-          type: string
-        scope:
-          type: string
+        data:
+          $ref: "#/components/schemas/CheckoutCaptured"
       required:
-      - client_id
-      - grant_type
-      id: OAuthTokenRequest
-    OAuthTokenResponse:
+      - data
+      id: CaptureCheckoutResponse
+    Checkout:
       example:
-        access_token: access_token
-        refresh_token: refresh_token
-        scope: scope
-        token_type: token_type
-        expires_in: 0.8008281904610115
+        checkout_url: checkout_url
+        amount: 0
+        merchant_order_id: merchant_order_id
+        last_refund_at: 2000-01-23T04:56:07.000+00:00
+        checkout_uuid: checkout_uuid
+        remaining_amount: 0
+        service_fee:
+          gross: 0
+          breakdown:
+          - amount: 5
+            id: id
+            label: label
+            type: rate_card
+          - amount: 5
+            id: id
+            label: label
+            type: rate_card
+          discount: 0
+          net: 0
+        captured_at: 2000-01-23T04:56:07.000+00:00
+        refunded_amount: 0
+        merchant_processor_fee: 0
+        return_url: return_url
+        currency: currency
+        merchant_service_fee: 0
+        cancel_url: cancel_url
+        merchant_expires_at: 2000-01-23T04:56:07.000+00:00
+        status: status
+        transaction_ref: transaction_ref
       properties:
-        access_token:
+        checkout_uuid:
           type: string
-        refresh_token:
+        merchant_order_id:
+          nullable: true
           type: string
-        expires_in:
-          type: number
-        token_type:
+        status:
           type: string
-        scope:
+        transaction_ref:
+          description: Always null. Will be removed in a future API version.
+          nullable: true
           type: string
-      required:
-      - access_token
-      - expires_in
-      - scope
-      - token_type
-      id: OAuthTokenResponse
-    Fee:
-      example:
-        gross: 0
-        breakdown:
-        - amount: 5
-          id: id
-          label: label
-          type: rate_card
-        - amount: 5
-          id: id
-          label: label
-          type: rate_card
-        discount: 0
-        net: 0
-      properties:
-        gross:
-          minimum: 0
-          type: integer
-        discount:
-          minimum: 0
-          type: integer
-        net:
-          minimum: 0
-          type: integer
-        breakdown:
-          items:
-            $ref: "#/components/schemas/FeeBreakdownLine"
-          type: array
-      required:
-      - breakdown
-      - discount
-      - gross
-      - net
-      title: Fee
-      id: Fee
-    FeeBreakdownLine:
-      example:
-        amount: 5
-        id: id
-        label: label
-        type: rate_card
-      properties:
-        type:
-          enum:
-          - rate_card
-          - promotion
+        checkout_url:
           type: string
-        id:
+        merchant_expires_at:
+          format: date-time
+          nullable: true
           type: string
-        label:
+        captured_at:
+          format: date-time
+          nullable: true
+          type: string
+        return_url:
+          nullable: true
+          type: string
+        cancel_url:
+          nullable: true
           type: string
         amount:
           type: integer
+        currency:
+          type: string
+        service_fee:
+          $ref: "#/components/schemas/Fee"
+        refunded_amount:
+          minimum: 0
+          type: integer
+        remaining_amount:
+          minimum: 0
+          type: integer
+        merchant_processor_fee:
+          minimum: 0
+          type: integer
+        merchant_service_fee:
+          minimum: 0
+          type: integer
+        last_refund_at:
+          format: date-time
+          nullable: true
+          type: string
       required:
       - amount
-      - id
-      - label
-      - type
-      title: FeeBreakdownLine
-      id: FeeBreakdownLine
-    TicketCustomData:
+      - cancel_url
+      - captured_at
+      - checkout_url
+      - checkout_uuid
+      - currency
+      - last_refund_at
+      - merchant_expires_at
+      - merchant_order_id
+      - merchant_processor_fee
+      - merchant_service_fee
+      - refunded_amount
+      - remaining_amount
+      - return_url
+      - service_fee
+      - status
+      - transaction_ref
+      id: Checkout
+    CheckoutCancelled:
       example:
-        venue_name: venue_name
-        event_id: event_id
-        venue_address:
-          key: ""
-        timezone: timezone
-        terms_url: terms_url
-        name: name
-        attendee_required: true
-        event_start_at: 2000-01-23T04:56:07.000+00:00
-        event_end_at: 2000-01-23T04:56:07.000+00:00
-        ticket_class: ticket_class
-        delivery_mode: email
-        seating:
-          seat: seat
-          allocation:
-            key: ""
-          section: section
-          row: row
+        merchant_order_id: merchant_order_id
+        checkout_uuid: checkout_uuid
+        status: status
       properties:
-        event_id:
+        checkout_uuid:
           type: string
-        event_start_at:
-          format: date-time
-          type: string
-        timezone:
-          type: string
-        ticket_class:
-          type: string
-        name:
-          type: string
-        event_end_at:
-          format: date-time
-          type: string
-        delivery_mode:
-          enum:
-          - email
-          - sms
-          - post
-          - at_venue
-          type: string
-        venue_name:
-          type: string
-        venue_address:
-          additionalProperties: {}
-        seating:
-          $ref: "#/components/schemas/TicketSeating"
-        terms_url:
-          type: string
-        attendee_required:
-          type: boolean
-      required:
-      - event_id
-      - event_start_at
-      - timezone
-      id: TicketCustomData
-    TicketSeating:
-      example:
-        seat: seat
-        allocation:
-          key: ""
-        section: section
-        row: row
-      properties:
-        section:
-          type: string
-        row:
-          type: string
-        seat:
-          type: string
-        allocation:
-          additionalProperties: {}
-      id: TicketSeating
-    PhysicalGoodsCustomData:
-      properties:
-        product_id:
-          type: string
-        comments:
-          type: string
-      required:
-      - product_id
-      id: PhysicalGoodsCustomData
-    ServiceCustomData:
-      properties:
-        serviceType:
+        merchant_order_id:
           nullable: true
           type: string
-      id: ServiceCustomData
-    DigitalGoodsCustomData:
+        status:
+          type: string
+      required:
+      - checkout_uuid
+      - merchant_order_id
+      - status
+      id: CheckoutCancelled
+    CheckoutCaptured:
+      example:
+        amount: 0
+        merchant_order_id: merchant_order_id
+        checkout_uuid: checkout_uuid
+        captured_at: 2000-01-23T04:56:07.000+00:00
+        currency: currency
+        status: status
       properties:
-        productCategory:
+        checkout_uuid:
+          type: string
+        merchant_order_id:
           nullable: true
           type: string
-      id: DigitalGoodsCustomData
-    LineItem:
-      discriminator:
-        mapping:
-          ticket: "#/components/schemas/TicketLineItem"
-          physical_goods: "#/components/schemas/PhysicalGoodsLineItem"
-          service: "#/components/schemas/ServiceLineItem"
-          digital_goods: "#/components/schemas/DigitalGoodsLineItem"
-          food_beverage: "#/components/schemas/FoodBeverageLineItem"
-          donation: "#/components/schemas/DonationLineItem"
-          other: "#/components/schemas/OtherLineItem"
-        propertyName: category
-      oneOf:
-      - $ref: "#/components/schemas/TicketLineItem"
-      - $ref: "#/components/schemas/PhysicalGoodsLineItem"
-      - $ref: "#/components/schemas/ServiceLineItem"
-      - $ref: "#/components/schemas/DigitalGoodsLineItem"
-      - $ref: "#/components/schemas/FoodBeverageLineItem"
-      - $ref: "#/components/schemas/DonationLineItem"
-      - $ref: "#/components/schemas/OtherLineItem"
-      id: LineItem
-    TicketLineItem:
+        status:
+          type: string
+        captured_at:
+          format: date-time
+          nullable: true
+          type: string
+        amount:
+          type: integer
+        currency:
+          type: string
+      required:
+      - amount
+      - captured_at
+      - checkout_uuid
+      - currency
+      - merchant_order_id
+      - status
+      id: CheckoutCaptured
+    CheckoutCreated:
       example:
-        parent_ref: parent_ref
-        item_ref: item_ref
-        quantity: 0
-        image_url: https://openapi-generator.tech
+        checkout_url: checkout_url
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        checkout_uuid: checkout_uuid
+        status: status
+      properties:
+        checkout_uuid:
+          type: string
+        status:
+          type: string
+        checkout_url:
+          type: string
+        expires_at:
+          format: date-time
+          nullable: true
+          type: string
+      required:
+      - checkout_url
+      - checkout_uuid
+      - expires_at
+      - status
+      id: CheckoutCreated
+    CheckoutDiscount:
+      example:
+        amount: 0
+        metadata:
+          key: ""
+        applies_to:
+        - applies_to
+        - applies_to
+        scope: cart
         name: name
         description: description
         currency: currency
-        sku: sku
-        unit_price: 0
-        category: ticket
-        custom_data:
-          venue_name: venue_name
-          event_id: event_id
-          venue_address:
-            key: ""
-          timezone: timezone
-          terms_url: terms_url
-          name: name
-          attendee_required: true
-          event_start_at: 2000-01-23T04:56:07.000+00:00
-          event_end_at: 2000-01-23T04:56:07.000+00:00
-          ticket_class: ticket_class
-          delivery_mode: email
-          seating:
-            seat: seat
-            allocation:
-              key: ""
-            section: section
-            row: row
       properties:
-        item_ref:
-          minLength: 1
-          type: string
-        parent_ref:
-          nullable: true
-          type: string
-        sku:
-          nullable: true
-          type: string
         name:
           minLength: 1
           type: string
         description:
           nullable: true
           type: string
-        image_url:
-          format: uri
-          nullable: true
+        scope:
+          enum:
+          - cart
+          - item
           type: string
-        quantity:
-          exclusiveMinimum: true
-          minimum: 0
-          type: integer
-        unit_price:
+        amount:
           minimum: 0
           type: integer
         currency:
           pattern: "^[A-Z]{3}$"
           type: string
-        category:
-          enum:
-          - ticket
-          type: string
-        custom_data:
-          $ref: "#/components/schemas/TicketCustomData"
+        metadata:
+          additionalProperties: {}
+          nullable: true
+        applies_to:
+          items:
+            type: string
+          nullable: true
+          type: array
       required:
-      - category
+      - amount
       - currency
-      - custom_data
-      - item_ref
       - name
-      - quantity
-      - unit_price
-      title: TicketLineItem
-      id: TicketLineItem
-    PhysicalGoodsLineItem:
-      properties:
-        item_ref:
-          minLength: 1
-          type: string
-        parent_ref:
-          nullable: true
-          type: string
-        sku:
-          nullable: true
-          type: string
-        name:
-          minLength: 1
-          type: string
-        description:
-          nullable: true
-          type: string
-        image_url:
-          format: uri
-          nullable: true
-          type: string
-        quantity:
-          exclusiveMinimum: true
-          minimum: 0
-          type: integer
-        unit_price:
-          minimum: 0
-          type: integer
-        currency:
-          pattern: "^[A-Z]{3}$"
-          type: string
-        category:
-          enum:
-          - physical_goods
-          type: string
-        custom_data:
-          $ref: "#/components/schemas/PhysicalGoodsCustomData"
-      required:
-      - category
-      - currency
-      - custom_data
-      - item_ref
-      - name
-      - quantity
-      - unit_price
-      title: PhysicalGoodsLineItem
-      id: PhysicalGoodsLineItem
-    ServiceLineItem:
-      properties:
-        item_ref:
-          minLength: 1
-          type: string
-        parent_ref:
-          nullable: true
-          type: string
-        sku:
-          nullable: true
-          type: string
-        name:
-          minLength: 1
-          type: string
-        description:
-          nullable: true
-          type: string
-        image_url:
-          format: uri
-          nullable: true
-          type: string
-        quantity:
-          exclusiveMinimum: true
-          minimum: 0
-          type: integer
-        unit_price:
-          minimum: 0
-          type: integer
-        currency:
-          pattern: "^[A-Z]{3}$"
-          type: string
-        category:
-          enum:
-          - service
-          type: string
-        custom_data:
-          $ref: "#/components/schemas/ServiceCustomData"
-      required:
-      - category
-      - currency
-      - item_ref
-      - name
-      - quantity
-      - unit_price
-      title: ServiceLineItem
-      id: ServiceLineItem
-    DigitalGoodsLineItem:
-      properties:
-        item_ref:
-          minLength: 1
-          type: string
-        parent_ref:
-          nullable: true
-          type: string
-        sku:
-          nullable: true
-          type: string
-        name:
-          minLength: 1
-          type: string
-        description:
-          nullable: true
-          type: string
-        image_url:
-          format: uri
-          nullable: true
-          type: string
-        quantity:
-          exclusiveMinimum: true
-          minimum: 0
-          type: integer
-        unit_price:
-          minimum: 0
-          type: integer
-        currency:
-          pattern: "^[A-Z]{3}$"
-          type: string
-        category:
-          enum:
-          - digital_goods
-          type: string
-        custom_data:
-          $ref: "#/components/schemas/DigitalGoodsCustomData"
-      required:
-      - category
-      - currency
-      - item_ref
-      - name
-      - quantity
-      - unit_price
-      title: DigitalGoodsLineItem
-      id: DigitalGoodsLineItem
-    FoodBeverageLineItem:
-      properties:
-        item_ref:
-          minLength: 1
-          type: string
-        parent_ref:
-          nullable: true
-          type: string
-        sku:
-          nullable: true
-          type: string
-        name:
-          minLength: 1
-          type: string
-        description:
-          nullable: true
-          type: string
-        image_url:
-          format: uri
-          nullable: true
-          type: string
-        quantity:
-          exclusiveMinimum: true
-          minimum: 0
-          type: integer
-        unit_price:
-          minimum: 0
-          type: integer
-        currency:
-          pattern: "^[A-Z]{3}$"
-          type: string
-        category:
-          enum:
-          - food_beverage
-          type: string
-      required:
-      - category
-      - currency
-      - item_ref
-      - name
-      - quantity
-      - unit_price
-      title: FoodBeverageLineItem
-      id: FoodBeverageLineItem
-    DonationLineItem:
-      properties:
-        item_ref:
-          minLength: 1
-          type: string
-        parent_ref:
-          nullable: true
-          type: string
-        sku:
-          nullable: true
-          type: string
-        name:
-          minLength: 1
-          type: string
-        description:
-          nullable: true
-          type: string
-        image_url:
-          format: uri
-          nullable: true
-          type: string
-        quantity:
-          exclusiveMinimum: true
-          minimum: 0
-          type: integer
-        unit_price:
-          minimum: 0
-          type: integer
-        currency:
-          pattern: "^[A-Z]{3}$"
-          type: string
-        category:
-          enum:
-          - donation
-          type: string
-      required:
-      - category
-      - currency
-      - item_ref
-      - name
-      - quantity
-      - unit_price
-      title: DonationLineItem
-      id: DonationLineItem
-    OtherLineItem:
-      properties:
-        item_ref:
-          minLength: 1
-          type: string
-        parent_ref:
-          nullable: true
-          type: string
-        sku:
-          nullable: true
-          type: string
-        name:
-          minLength: 1
-          type: string
-        description:
-          nullable: true
-          type: string
-        image_url:
-          format: uri
-          nullable: true
-          type: string
-        quantity:
-          exclusiveMinimum: true
-          minimum: 0
-          type: integer
-        unit_price:
-          minimum: 0
-          type: integer
-        currency:
-          pattern: "^[A-Z]{3}$"
-          type: string
-        category:
-          enum:
-          - other
-          type: string
-      required:
-      - category
-      - currency
-      - item_ref
-      - name
-      - quantity
-      - unit_price
-      title: OtherLineItem
-      id: OtherLineItem
+      - scope
+      title: CheckoutDiscount
+      id: CheckoutDiscount
     CheckoutFee:
       example:
         amount: 0
@@ -1314,91 +987,6 @@ components:
       - scope
       title: CheckoutFee
       id: CheckoutFee
-    CheckoutDiscount:
-      example:
-        amount: 0
-        metadata:
-          key: ""
-        applies_to:
-        - applies_to
-        - applies_to
-        scope: cart
-        name: name
-        description: description
-        currency: currency
-      properties:
-        name:
-          minLength: 1
-          type: string
-        description:
-          nullable: true
-          type: string
-        scope:
-          enum:
-          - cart
-          - item
-          type: string
-        amount:
-          minimum: 0
-          type: integer
-        currency:
-          pattern: "^[A-Z]{3}$"
-          type: string
-        metadata:
-          additionalProperties: {}
-          nullable: true
-        applies_to:
-          items:
-            type: string
-          nullable: true
-          type: array
-      required:
-      - amount
-      - currency
-      - name
-      - scope
-      title: CheckoutDiscount
-      id: CheckoutDiscount
-    Tax:
-      properties:
-        amount:
-          minimum: 0
-          type: integer
-        percentage:
-          nullable: true
-          pattern: "^\\d+(\\.\\d{1,4})?$"
-          type: string
-        inclusive:
-          type: boolean
-      id: Tax
-    CustomerData:
-      properties:
-        name:
-          nullable: true
-          type: string
-        mobile:
-          nullable: true
-          type: string
-        email:
-          nullable: true
-          type: string
-      id: CustomerData
-    CheckoutFriends:
-      properties:
-        count:
-          description: "How many friends will split, not counting the customer. Give\
-            \ this or `people`."
-          maximum: 50
-          minimum: 1
-          type: integer
-        people:
-          description: "The friends, optionally with their shares. Give this or `count`."
-          items:
-            $ref: "#/components/schemas/CheckoutFriend"
-          maxItems: 50
-          minItems: 1
-          type: array
-      id: CheckoutFriends
     CheckoutFriend:
       properties:
         name:
@@ -1447,6 +1035,22 @@ components:
       required:
       - item_ref
       id: CheckoutFriendItem
+    CheckoutFriends:
+      properties:
+        count:
+          description: "How many friends will split, not counting the customer. Give\
+            \ this or `people`."
+          maximum: 50
+          minimum: 1
+          type: integer
+        people:
+          description: "The friends, optionally with their shares. Give this or `count`."
+          items:
+            $ref: "#/components/schemas/CheckoutFriend"
+          maxItems: 50
+          minItems: 1
+          type: array
+      id: CheckoutFriends
     CreateCheckoutRequest:
       example:
         allocation_model: basic_amount
@@ -1636,29 +1240,6 @@ components:
       - return_url
       - total_amount
       id: CreateCheckoutRequest
-    CheckoutCreated:
-      example:
-        checkout_url: checkout_url
-        expires_at: 2000-01-23T04:56:07.000+00:00
-        checkout_uuid: checkout_uuid
-        status: status
-      properties:
-        checkout_uuid:
-          type: string
-        status:
-          type: string
-        checkout_url:
-          type: string
-        expires_at:
-          format: date-time
-          nullable: true
-          type: string
-      required:
-      - checkout_url
-      - checkout_uuid
-      - expires_at
-      - status
-      id: CheckoutCreated
     CreateCheckoutResponse:
       example:
         data:
@@ -1672,106 +1253,250 @@ components:
       required:
       - data
       id: CreateCheckoutResponse
-    Checkout:
+    CreateRefundRequest:
       example:
-        checkout_url: checkout_url
-        amount: 0
-        merchant_order_id: merchant_order_id
-        last_refund_at: 2000-01-23T04:56:07.000+00:00
-        checkout_uuid: checkout_uuid
-        remaining_amount: 0
-        service_fee:
-          gross: 0
-          breakdown:
-          - amount: 5
-            id: id
-            label: label
-            type: rate_card
-          - amount: 5
-            id: id
-            label: label
-            type: rate_card
-          discount: 0
-          net: 0
-        captured_at: 2000-01-23T04:56:07.000+00:00
-        refunded_amount: 0
-        merchant_processor_fee: 0
-        return_url: return_url
-        currency: currency
-        merchant_service_fee: 0
-        cancel_url: cancel_url
-        merchant_expires_at: 2000-01-23T04:56:07.000+00:00
-        status: status
-        transaction_ref: transaction_ref
+        reason: reason
+        merchant_refund_ref: merchant_refund_ref
       properties:
-        checkout_uuid:
+        reason:
+          description: Free-text reason; forwarded to Stripe as refund metadata.
+          maxLength: 500
           type: string
-        merchant_order_id:
+        merchant_refund_ref:
+          description: Idempotency key scoped to the merchant. Repeating the same
+            value returns the existing refund.
+          maxLength: 255
+          minLength: 1
+          type: string
+      required:
+      - merchant_refund_ref
+      id: CreateRefundRequest
+    CustomerData:
+      properties:
+        name:
           nullable: true
           type: string
-        status:
-          type: string
-        transaction_ref:
-          description: Always null. Will be removed in a future API version.
+        mobile:
           nullable: true
           type: string
-        checkout_url:
-          type: string
-        merchant_expires_at:
-          format: date-time
+        email:
           nullable: true
           type: string
-        captured_at:
-          format: date-time
+      id: CustomerData
+    DigitalGoodsCustomData:
+      properties:
+        productCategory:
           nullable: true
           type: string
-        return_url:
+      id: DigitalGoodsCustomData
+    DigitalGoodsLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
           nullable: true
           type: string
-        cancel_url:
+        sku:
           nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - digital_goods
+          type: string
+        custom_data:
+          $ref: "#/components/schemas/DigitalGoodsCustomData"
+      required:
+      - category
+      - currency
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: DigitalGoodsLineItem
+      id: DigitalGoodsLineItem
+    DonationLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - donation
+          type: string
+      required:
+      - category
+      - currency
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: DonationLineItem
+      id: DonationLineItem
+    ErrorResponseDto:
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+        code:
+          type: string
+        metadata:
+          additionalProperties: {}
+      required:
+      - code
+      - error
+      - message
+    Fee:
+      example:
+        gross: 0
+        breakdown:
+        - amount: 5
+          id: id
+          label: label
+          type: rate_card
+        - amount: 5
+          id: id
+          label: label
+          type: rate_card
+        discount: 0
+        net: 0
+      properties:
+        gross:
+          minimum: 0
+          type: integer
+        discount:
+          minimum: 0
+          type: integer
+        net:
+          minimum: 0
+          type: integer
+        breakdown:
+          items:
+            $ref: "#/components/schemas/FeeBreakdownLine"
+          type: array
+      required:
+      - breakdown
+      - discount
+      - gross
+      - net
+      title: Fee
+      id: Fee
+    FeeBreakdownLine:
+      example:
+        amount: 5
+        id: id
+        label: label
+        type: rate_card
+      properties:
+        type:
+          enum:
+          - rate_card
+          - promotion
+          type: string
+        id:
+          type: string
+        label:
           type: string
         amount:
           type: integer
-        currency:
-          type: string
-        service_fee:
-          $ref: "#/components/schemas/Fee"
-        refunded_amount:
-          minimum: 0
-          type: integer
-        remaining_amount:
-          minimum: 0
-          type: integer
-        merchant_processor_fee:
-          minimum: 0
-          type: integer
-        merchant_service_fee:
-          minimum: 0
-          type: integer
-        last_refund_at:
-          format: date-time
-          nullable: true
-          type: string
       required:
       - amount
-      - cancel_url
-      - captured_at
-      - checkout_url
-      - checkout_uuid
+      - id
+      - label
+      - type
+      title: FeeBreakdownLine
+      id: FeeBreakdownLine
+    FoodBeverageLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - food_beverage
+          type: string
+      required:
+      - category
       - currency
-      - last_refund_at
-      - merchant_expires_at
-      - merchant_order_id
-      - merchant_processor_fee
-      - merchant_service_fee
-      - refunded_amount
-      - remaining_amount
-      - return_url
-      - service_fee
-      - status
-      - transaction_ref
-      id: Checkout
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: FoodBeverageLineItem
+      id: FoodBeverageLineItem
     GetCheckoutResponse:
       example:
         data:
@@ -1810,130 +1535,319 @@ components:
       required:
       - data
       id: GetCheckoutResponse
-    CaptureCheckoutRequest:
+    GetSettlementResponse:
       example:
-        metadata:
-          key: ""
-        merchant_order_id: merchant_order_id
-        currency: currency
-        expected_total_amount: 0
+        data:
+          stripe_transfer_id: stripe_transfer_id
+          notes: notes
+          reviewed_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          upsell: ""
+          uuid: uuid
+          settled_amount: 6
+          merchant_payable_amount: 0
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          period_from: 2000-01-23T04:56:07.000+00:00
+          idempotency_key: idempotency_key
+          rejection_reason: rejection_reason
+          currency: currency
+          settled_at: 2000-01-23T04:56:07.000+00:00
+          merchant_uuid: merchant_uuid
+          period_to: 2000-01-23T04:56:07.000+00:00
+          reviewed_by_user_uuid: reviewed_by_user_uuid
+          status: status
       properties:
-        merchant_order_id:
+        data:
+          $ref: "#/components/schemas/Settlement"
+      required:
+      - data
+      id: GetSettlementResponse
+    HealthResponse:
+      example:
+        status: ok
+      properties:
+        status:
+          example: ok
+          type: string
+      required:
+      - status
+      id: HealthResponse
+    LineItem:
+      discriminator:
+        mapping:
+          ticket: "#/components/schemas/TicketLineItem"
+          physical_goods: "#/components/schemas/PhysicalGoodsLineItem"
+          service: "#/components/schemas/ServiceLineItem"
+          digital_goods: "#/components/schemas/DigitalGoodsLineItem"
+          food_beverage: "#/components/schemas/FoodBeverageLineItem"
+          donation: "#/components/schemas/DonationLineItem"
+          other: "#/components/schemas/OtherLineItem"
+        propertyName: category
+      oneOf:
+      - $ref: "#/components/schemas/TicketLineItem"
+      - $ref: "#/components/schemas/PhysicalGoodsLineItem"
+      - $ref: "#/components/schemas/ServiceLineItem"
+      - $ref: "#/components/schemas/DigitalGoodsLineItem"
+      - $ref: "#/components/schemas/FoodBeverageLineItem"
+      - $ref: "#/components/schemas/DonationLineItem"
+      - $ref: "#/components/schemas/OtherLineItem"
+      id: LineItem
+    ListSettlementsResponse:
+      example:
+        data:
+        - stripe_transfer_id: stripe_transfer_id
+          notes: notes
+          reviewed_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          upsell: ""
+          uuid: uuid
+          settled_amount: 6
+          merchant_payable_amount: 0
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          period_from: 2000-01-23T04:56:07.000+00:00
+          idempotency_key: idempotency_key
+          rejection_reason: rejection_reason
+          currency: currency
+          settled_at: 2000-01-23T04:56:07.000+00:00
+          merchant_uuid: merchant_uuid
+          period_to: 2000-01-23T04:56:07.000+00:00
+          reviewed_by_user_uuid: reviewed_by_user_uuid
+          status: status
+        - stripe_transfer_id: stripe_transfer_id
+          notes: notes
+          reviewed_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          upsell: ""
+          uuid: uuid
+          settled_amount: 6
+          merchant_payable_amount: 0
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          period_from: 2000-01-23T04:56:07.000+00:00
+          idempotency_key: idempotency_key
+          rejection_reason: rejection_reason
+          currency: currency
+          settled_at: 2000-01-23T04:56:07.000+00:00
+          merchant_uuid: merchant_uuid
+          period_to: 2000-01-23T04:56:07.000+00:00
+          reviewed_by_user_uuid: reviewed_by_user_uuid
+          status: status
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/Settlement"
+          type: array
+      required:
+      - data
+      id: ListSettlementsResponse
+    OAuthTokenRequest:
+      example:
+        refresh_token: refresh_token
+        password: password
+        grant_type: grant_type
+        scope: scope
+        client_secret: client_secret
+        client_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        username: username
+      properties:
+        grant_type:
+          minLength: 1
+          type: string
+        client_id:
+          format: uuid
+          type: string
+        client_secret:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        refresh_token:
+          type: string
+        scope:
+          type: string
+      required:
+      - client_id
+      - grant_type
+      id: OAuthTokenRequest
+    OAuthTokenResponse:
+      example:
+        access_token: access_token
+        refresh_token: refresh_token
+        scope: scope
+        token_type: token_type
+        expires_in: 0.8008281904610115
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: number
+        token_type:
+          type: string
+        scope:
+          type: string
+      required:
+      - access_token
+      - expires_in
+      - scope
+      - token_type
+      id: OAuthTokenResponse
+    OtherLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
           nullable: true
           type: string
-        expected_total_amount:
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
           exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
           minimum: 0
           type: integer
         currency:
           pattern: "^[A-Z]{3}$"
           type: string
-        metadata:
-          additionalProperties: {}
-          nullable: true
-      id: CaptureCheckoutRequest
-    CheckoutCaptured:
-      example:
-        amount: 0
-        merchant_order_id: merchant_order_id
-        checkout_uuid: checkout_uuid
-        captured_at: 2000-01-23T04:56:07.000+00:00
-        currency: currency
-        status: status
-      properties:
-        checkout_uuid:
-          type: string
-        merchant_order_id:
-          nullable: true
-          type: string
-        status:
-          type: string
-        captured_at:
-          format: date-time
-          nullable: true
-          type: string
-        amount:
-          type: integer
-        currency:
+        category:
+          enum:
+          - other
           type: string
       required:
-      - amount
-      - captured_at
-      - checkout_uuid
+      - category
       - currency
-      - merchant_order_id
-      - status
-      id: CheckoutCaptured
-    CaptureCheckoutResponse:
-      example:
-        data:
-          amount: 0
-          merchant_order_id: merchant_order_id
-          checkout_uuid: checkout_uuid
-          captured_at: 2000-01-23T04:56:07.000+00:00
-          currency: currency
-          status: status
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: OtherLineItem
+      id: OtherLineItem
+    PhysicalGoodsCustomData:
       properties:
-        data:
-          $ref: "#/components/schemas/CheckoutCaptured"
-      required:
-      - data
-      id: CaptureCheckoutResponse
-    CancelCheckoutRequest:
-      example:
-        merchant_order_id: merchant_order_id
-      properties:
-        merchant_order_id:
+        product_id:
           type: string
-      id: CancelCheckoutRequest
-    CheckoutCancelled:
-      example:
-        merchant_order_id: merchant_order_id
-        checkout_uuid: checkout_uuid
-        status: status
-      properties:
-        checkout_uuid:
-          type: string
-        merchant_order_id:
-          nullable: true
-          type: string
-        status:
+        comments:
           type: string
       required:
-      - checkout_uuid
-      - merchant_order_id
-      - status
-      id: CheckoutCancelled
-    CancelCheckoutResponse:
-      example:
-        data:
-          merchant_order_id: merchant_order_id
-          checkout_uuid: checkout_uuid
-          status: status
+      - product_id
+      id: PhysicalGoodsCustomData
+    PhysicalGoodsLineItem:
       properties:
-        data:
-          $ref: "#/components/schemas/CheckoutCancelled"
-      required:
-      - data
-      id: CancelCheckoutResponse
-    CreateRefundRequest:
-      example:
-        reason: reason
-        merchant_refund_ref: merchant_refund_ref
-      properties:
-        reason:
-          description: Free-text reason; forwarded to Stripe as refund metadata.
-          maxLength: 500
-          type: string
-        merchant_refund_ref:
-          description: Idempotency key scoped to the merchant. Repeating the same
-            value returns the existing refund.
-          maxLength: 255
+        item_ref:
           minLength: 1
           type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - physical_goods
+          type: string
+        custom_data:
+          $ref: "#/components/schemas/PhysicalGoodsCustomData"
       required:
-      - merchant_refund_ref
-      id: CreateRefundRequest
+      - category
+      - currency
+      - custom_data
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: PhysicalGoodsLineItem
+      id: PhysicalGoodsLineItem
+    ServiceCustomData:
+      properties:
+        serviceType:
+          nullable: true
+          type: string
+      id: ServiceCustomData
+    ServiceLineItem:
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - service
+          type: string
+        custom_data:
+          $ref: "#/components/schemas/ServiceCustomData"
+      required:
+      - category
+      - currency
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: ServiceLineItem
+      id: ServiceLineItem
     Settlement:
       example:
         stripe_transfer_id: stripe_transfer_id
@@ -2053,83 +1967,169 @@ components:
       - order_count
       - sales_amount
       id: SettlementUpsell
-    ListSettlementsResponse:
-      example:
-        data:
-        - stripe_transfer_id: stripe_transfer_id
-          notes: notes
-          reviewed_at: 2000-01-23T04:56:07.000+00:00
-          created_at: 2000-01-23T04:56:07.000+00:00
-          upsell: ""
-          uuid: uuid
-          settled_amount: 6
-          merchant_payable_amount: 0
-          expires_at: 2000-01-23T04:56:07.000+00:00
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          period_from: 2000-01-23T04:56:07.000+00:00
-          idempotency_key: idempotency_key
-          rejection_reason: rejection_reason
-          currency: currency
-          settled_at: 2000-01-23T04:56:07.000+00:00
-          merchant_uuid: merchant_uuid
-          period_to: 2000-01-23T04:56:07.000+00:00
-          reviewed_by_user_uuid: reviewed_by_user_uuid
-          status: status
-        - stripe_transfer_id: stripe_transfer_id
-          notes: notes
-          reviewed_at: 2000-01-23T04:56:07.000+00:00
-          created_at: 2000-01-23T04:56:07.000+00:00
-          upsell: ""
-          uuid: uuid
-          settled_amount: 6
-          merchant_payable_amount: 0
-          expires_at: 2000-01-23T04:56:07.000+00:00
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          period_from: 2000-01-23T04:56:07.000+00:00
-          idempotency_key: idempotency_key
-          rejection_reason: rejection_reason
-          currency: currency
-          settled_at: 2000-01-23T04:56:07.000+00:00
-          merchant_uuid: merchant_uuid
-          period_to: 2000-01-23T04:56:07.000+00:00
-          reviewed_by_user_uuid: reviewed_by_user_uuid
-          status: status
+    Tax:
       properties:
-        data:
-          items:
-            $ref: "#/components/schemas/Settlement"
-          type: array
-      required:
-      - data
-      id: ListSettlementsResponse
-    GetSettlementResponse:
+        amount:
+          minimum: 0
+          type: integer
+        percentage:
+          nullable: true
+          pattern: "^\\d+(\\.\\d{1,4})?$"
+          type: string
+        inclusive:
+          type: boolean
+      id: Tax
+    TicketCustomData:
       example:
-        data:
-          stripe_transfer_id: stripe_transfer_id
-          notes: notes
-          reviewed_at: 2000-01-23T04:56:07.000+00:00
-          created_at: 2000-01-23T04:56:07.000+00:00
-          upsell: ""
-          uuid: uuid
-          settled_amount: 6
-          merchant_payable_amount: 0
-          expires_at: 2000-01-23T04:56:07.000+00:00
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          period_from: 2000-01-23T04:56:07.000+00:00
-          idempotency_key: idempotency_key
-          rejection_reason: rejection_reason
-          currency: currency
-          settled_at: 2000-01-23T04:56:07.000+00:00
-          merchant_uuid: merchant_uuid
-          period_to: 2000-01-23T04:56:07.000+00:00
-          reviewed_by_user_uuid: reviewed_by_user_uuid
-          status: status
+        venue_name: venue_name
+        event_id: event_id
+        venue_address:
+          key: ""
+        timezone: timezone
+        terms_url: terms_url
+        name: name
+        attendee_required: true
+        event_start_at: 2000-01-23T04:56:07.000+00:00
+        event_end_at: 2000-01-23T04:56:07.000+00:00
+        ticket_class: ticket_class
+        delivery_mode: email
+        seating:
+          seat: seat
+          allocation:
+            key: ""
+          section: section
+          row: row
       properties:
-        data:
-          $ref: "#/components/schemas/Settlement"
+        event_id:
+          type: string
+        event_start_at:
+          format: date-time
+          type: string
+        timezone:
+          type: string
+        ticket_class:
+          type: string
+        name:
+          type: string
+        event_end_at:
+          format: date-time
+          type: string
+        delivery_mode:
+          enum:
+          - email
+          - sms
+          - post
+          - at_venue
+          type: string
+        venue_name:
+          type: string
+        venue_address:
+          additionalProperties: {}
+        seating:
+          $ref: "#/components/schemas/TicketSeating"
+        terms_url:
+          type: string
+        attendee_required:
+          type: boolean
       required:
-      - data
-      id: GetSettlementResponse
+      - event_id
+      - event_start_at
+      - timezone
+      id: TicketCustomData
+    TicketLineItem:
+      example:
+        parent_ref: parent_ref
+        item_ref: item_ref
+        quantity: 0
+        image_url: https://openapi-generator.tech
+        name: name
+        description: description
+        currency: currency
+        sku: sku
+        unit_price: 0
+        category: ticket
+        custom_data:
+          venue_name: venue_name
+          event_id: event_id
+          venue_address:
+            key: ""
+          timezone: timezone
+          terms_url: terms_url
+          name: name
+          attendee_required: true
+          event_start_at: 2000-01-23T04:56:07.000+00:00
+          event_end_at: 2000-01-23T04:56:07.000+00:00
+          ticket_class: ticket_class
+          delivery_mode: email
+          seating:
+            seat: seat
+            allocation:
+              key: ""
+            section: section
+            row: row
+      properties:
+        item_ref:
+          minLength: 1
+          type: string
+        parent_ref:
+          nullable: true
+          type: string
+        sku:
+          nullable: true
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        image_url:
+          format: uri
+          nullable: true
+          type: string
+        quantity:
+          exclusiveMinimum: true
+          minimum: 0
+          type: integer
+        unit_price:
+          minimum: 0
+          type: integer
+        currency:
+          pattern: "^[A-Z]{3}$"
+          type: string
+        category:
+          enum:
+          - ticket
+          type: string
+        custom_data:
+          $ref: "#/components/schemas/TicketCustomData"
+      required:
+      - category
+      - currency
+      - custom_data
+      - item_ref
+      - name
+      - quantity
+      - unit_price
+      title: TicketLineItem
+      id: TicketLineItem
+    TicketSeating:
+      example:
+        seat: seat
+        allocation:
+          key: ""
+        section: section
+        row: row
+      properties:
+        section:
+          type: string
+        row:
+          type: string
+        seat:
+          type: string
+        allocation:
+          additionalProperties: {}
+      id: TicketSeating
     createCheckout_401_response:
       allOf:
       - $ref: "#/components/schemas/ErrorResponseDto"
